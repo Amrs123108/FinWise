@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinWise — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#1E6B55;--g2:#155444;--g-light:#E8F4F1;--g-pale:#F0FAF7;
+  --navy:#1A3C5E;--amber:#F0A500;--amber-light:#FFF8E1;
+  --red:#C0392B;--red-light:#FDEDEB;--yellow:#E6A817;--yellow-light:#FFFBEB;
+  --ink:#1C1C1E;--ink2:#3A3A3C;--ink3:#636366;--ink4:#AEAEB2;
+  --surface:#FFFFFF;--surface2:#F5F7FA;--surface3:#ECEEF2;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --radius:14px;--radius-sm:8px;--radius-lg:20px;
+  --shadow:0 2px 16px rgba(0,0,0,0.07);--shadow-md:0 4px 24px rgba(0,0,0,0.10);
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:#E8ECF2;color:var(--ink)}
+
+/* ── LAYOUT ── */
+.app-wrap{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px 12px}
+.app-frame{
+  display:flex;width:100%;max-width:1080px;min-height:680px;
+  border-radius:var(--radius-lg);overflow:hidden;
+  border:0.5px solid var(--border2);box-shadow:var(--shadow-md);
+  background:var(--surface2);
+}
+
+/* ── SIDEBAR ── */
+.sidebar{width:215px;min-width:215px;background:var(--navy);display:flex;flex-direction:column}
+.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.logo-mark{display:flex;align-items:center;gap:8px}
+.logo-icon{width:32px;height:32px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:17px;height:17px}
+.logo-text{font-size:19px;font-weight:600;color:#fff;letter-spacing:-0.5px}
+.sidebar-user{padding:12px 15px;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+.user-info p{font-size:12.5px;font-weight:500;color:#fff}
+.user-info span{font-size:11px;color:rgba(255,255,255,0.4)}
+.sidebar-nav{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:2px}
+.nav-label{font-size:10px;font-weight:500;color:rgba(255,255,255,0.28);letter-spacing:.08em;text-transform:uppercase;padding:10px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s;color:rgba(255,255,255,0.52);font-size:13px;font-weight:400;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.82)}
+.nav-item.active{background:var(--g);color:#fff;font-weight:500}
+.nav-item svg{width:15px;height:15px;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--amber);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:20px}
+.sidebar-bottom{padding:10px 8px;border-top:1px solid rgba(255,255,255,0.08)}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--surface2)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:var(--surface);border-bottom:0.5px solid var(--border)}
+.topbar-left h2{font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.3px}
+.topbar-left p{font-size:12px;color:var(--ink3);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:'DM Sans',sans-serif}
+.btn-primary{background:var(--g);color:#fff}
+.btn-primary:hover{background:var(--g2)}
+.btn-ghost{background:transparent;color:var(--ink2);border:0.5px solid var(--border2)}
+.btn-ghost:hover{background:var(--surface2)}
+.btn svg{width:13px;height:13px}
+.content{flex:1;overflow-y:auto;padding:18px 22px 26px}
+
+/* ── PAGES ── */
+.page{display:none}.page.active{display:block}
+
+/* ── DASHBOARD ── */
+.balance-hero{background:linear-gradient(135deg,var(--navy) 0%,#254e78 100%);border-radius:var(--radius);padding:20px 22px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden}
+.balance-hero::before{content:'';position:absolute;top:-28px;right:-28px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.04)}
+.balance-hero::after{content:'';position:absolute;bottom:-18px;right:55px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.03)}
+.balance-label{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:3px;letter-spacing:.04em}
+.balance-amount{font-size:36px;font-weight:600;letter-spacing:-1px;margin-bottom:2px}
+.balance-row{display:flex;align-items:center;gap:10px;margin-top:12px}
+.health-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.12);border-radius:20px;padding:5px 11px;font-size:11.5px;font-weight:500}
+.health-dot{width:7px;height:7px;border-radius:50%}
+.vs-month{font-size:11.5px;color:rgba(255,255,255,0.48)}
+.vs-month span{color:#5DCAA5;font-weight:500}
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.stat-card{background:var(--surface);border-radius:var(--radius);padding:13px 15px;border:0.5px solid var(--border)}
+.stat-label{font-size:10.5px;color:var(--ink3);margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:.03em}
+.stat-value{font-size:19px;font-weight:600;letter-spacing:-.4px}
+.stat-sub{font-size:10.5px;color:var(--ink4);margin-top:2px}
+.text-green{color:var(--g)}.text-red{color:var(--red)}.text-amber{color:var(--amber)}.text-ink{color:var(--ink)}
+
+.section-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:9px;letter-spacing:-.2px;display:flex;align-items:center;justify-content:space-between}
+.section-title a{font-size:12px;font-weight:400;color:var(--g);cursor:pointer;text-decoration:none}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px}
+.one-col{margin-bottom:14px}
+.card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:15px}
+
+/* meta cards */
+.meta-card{margin-bottom:9px}.meta-card:last-child{margin-bottom:0}
+.meta-header{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.meta-emoji{font-size:17px;line-height:1}
+.meta-name{font-size:13px;font-weight:500;flex:1}
+.meta-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
+.badge-green{background:var(--g-light);color:var(--g2)}
+.badge-amber{background:var(--amber-light);color:#7A5200}
+.badge-red{background:var(--red-light);color:#8B2019}
+.progress-track{height:5px;background:var(--surface3);border-radius:10px;overflow:hidden;margin-bottom:5px}
+.progress-fill{height:100%;border-radius:10px;transition:width .6s ease}
+.fill-green{background:var(--g)}.fill-amber{background:var(--amber)}.fill-red{background:var(--red)}
+.meta-footer{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink3)}
+
+/* rec cards */
+.rec-card{display:flex;gap:11px;align-items:flex-start;padding:11px;border-radius:var(--radius-sm);background:var(--surface2);margin-bottom:7px;border:0.5px solid var(--border)}
+.rec-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rec-icon svg{width:15px;height:15px}
+.rec-title{font-size:12.5px;font-weight:500;margin-bottom:2px}
+.rec-desc{font-size:11.5px;color:var(--ink3);line-height:1.4}
+.rec-impact{font-size:10.5px;font-weight:600;margin-top:3px}
+.rec-actions{display:flex;gap:5px;margin-top:7px}
+.rec-btn{font-size:11px;padding:4px 9px;border-radius:20px;border:0.5px solid var(--border2);background:var(--surface);cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink2);transition:background .12s}
+.rec-btn:hover{background:var(--g-light);color:var(--g2);border-color:var(--g)}
+
+/* txns */
+.txn-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.txn-item:last-child{border-bottom:none;padding-bottom:0}
+.txn-icon{width:32px;height:32px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.txn-info{flex:1}
+.txn-name{font-size:12.5px;font-weight:500}
+.txn-cat{font-size:10.5px;color:var(--ink3)}
+.txn-amount{font-size:13.5px;font-weight:600}
+
+/* ── INGRESOS ── */
+.income-total-hero{background:var(--g);border-radius:var(--radius);padding:17px 20px;color:#fff;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between}
+.income-total-hero div:first-child p{font-size:11px;color:rgba(255,255,255,0.58)}
+.income-total-hero div:first-child h3{font-size:28px;font-weight:600;letter-spacing:-1px}
+.income-total-hero div:last-child{text-align:right}
+.income-total-hero div:last-child p{font-size:10.5px;color:rgba(255,255,255,0.58)}
+.income-total-hero div:last-child span{font-size:14px;font-weight:500;color:#A8E8D4}
+.income-source-card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:13px 15px;display:flex;align-items:center;gap:11px;margin-bottom:7px}
+.income-source-icon{width:36px;height:36px;border-radius:9px;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.income-source-info{flex:1}
+.income-source-name{font-size:13.5px;font-weight:500}
+.income-source-meta{font-size:10.5px;color:var(--ink3);margin-top:1px}
+.income-source-amount{font-size:16px;font-weight:600;color:var(--g)}
+.income-source-freq{font-size:10px;color:var(--ink3);text-align:right;margin-top:1px}
+.type-badge{font-size:9.5px;font-weight:500;padding:2px 6px;border-radius:20px;display:inline-block;margin-top:2px}
+.type-fixed{background:var(--g-light);color:var(--g2)}
+.type-var{background:var(--amber-light);color:#7A5200}
+
+/* ── GASTOS ── */
+.alert-banner{background:var(--red-light);border:0.5px solid rgba(192,57,43,0.2);border-radius:var(--radius-sm);padding:9px 13px;display:flex;gap:9px;align-items:flex-start;margin-bottom:13px}
+.alert-banner svg{width:15px;height:15px;color:var(--red);flex-shrink:0;margin-top:1px}
+.alert-text{font-size:12px;color:#7B1C12;line-height:1.4}
+.alert-text strong{font-weight:600}
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
+.cat-item{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:13px}
+.cat-header{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.cat-icon{font-size:17px}
+.cat-name{font-size:12.5px;font-weight:500;flex:1}
+.cat-pct{font-size:10.5px;color:var(--ink3)}
+.cat-amounts{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-top:3px}
+.cat-amounts strong{color:var(--ink)}
+
+/* ── METAS ── */
+.goal-detail-card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:17px;margin-bottom:11px}
+.goal-big-header{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
+.goal-big-emoji{font-size:30px;line-height:1}
+.goal-big-info{flex:1}
+.goal-big-name{font-size:16px;font-weight:600;letter-spacing:-.3px}
+.goal-big-sub{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.goal-progress-row{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.goal-pct{font-size:26px;font-weight:600;color:var(--g);letter-spacing:-1px;min-width:56px}
+.goal-progress-info{flex:1}
+.goal-progress-track{height:7px;border-radius:10px;background:var(--surface3);overflow:hidden;margin-bottom:3px}
+.goal-progress-fill{height:100%;border-radius:10px;background:var(--g)}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.scenario-card{background:var(--surface2);border-radius:var(--radius-sm);border:0.5px solid var(--border);padding:11px;text-align:center;cursor:pointer;transition:all .15s}
+.scenario-card.selected{border-color:var(--g);background:var(--g-pale)}
+.scenario-card:hover{border-color:var(--g)}
+.scenario-label{font-size:9.5px;color:var(--ink3);margin-bottom:3px}
+.scenario-amount{font-size:15px;font-weight:600;color:var(--ink)}
+.scenario-date{font-size:10.5px;color:var(--ink3);margin-top:2px}
+.scenario-tag{font-size:9.5px;color:var(--g);font-weight:500;margin-top:3px}
+
+/* ── PAREJA ── */
+.couple-header{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.couple-avatars{display:flex}
+.couple-avatars .avatar{border:2px solid var(--surface)}
+.couple-avatars .avatar:last-child{margin-left:-9px;background:#6C3483}
+.couple-info h3{font-size:15px;font-weight:600}
+.couple-info p{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.couple-rule{margin-left:auto;background:var(--g-light);color:var(--g2);font-size:10.5px;font-weight:500;padding:4px 11px;border-radius:20px;white-space:nowrap}
+.balance-split{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.person-card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:14px}
+.person-card-header{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.person-card-name{font-size:13.5px;font-weight:600}
+.person-paid{font-size:20px;font-weight:600;letter-spacing:-.4px;margin-bottom:2px}
+.person-expected{font-size:10.5px;color:var(--ink3)}
+.person-diff{display:inline-flex;align-items:center;gap:3px;margin-top:7px;font-size:10.5px;font-weight:500;padding:3px 7px;border-radius:20px}
+.owed-banner{background:var(--amber-light);border:0.5px solid rgba(240,165,0,0.25);border-radius:var(--radius-sm);padding:11px 15px;display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.owed-text{font-size:12.5px;color:#6B4A00;flex:1}
+.owed-text strong{font-weight:600}
+.settle-btn{background:var(--amber);color:#fff;border:none;padding:6px 13px;border-radius:var(--radius-sm);font-size:11.5px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;white-space:nowrap}
+.settle-btn:hover{background:#C88B00}
+
+/* ── PERFIL ── */
+/* (shares card styles) */
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.38);z-index:100;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:22px;width:100%;max-width:520px;animation:slideUp .22s ease}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:34px;height:4px;background:var(--surface3);border-radius:4px;margin:0 auto 16px}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:16px;letter-spacing:-.3px}
+.form-group{margin-bottom:13px}
+.form-label{font-size:11.5px;font-weight:500;color:var(--ink2);margin-bottom:5px;display:block}
+.form-input{width:100%;padding:9px 11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--surface2);font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color .15s}
+.form-input:focus{border-color:var(--g);background:var(--surface)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cat-grid-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:3px}
+.cat-btn{background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:7px 3px;font-size:10.5px;text-align:center;cursor:pointer;transition:all .12s;font-family:'DM Sans',sans-serif;color:var(--ink2)}
+.cat-btn.selected{background:var(--g-light);border-color:var(--g);color:var(--g2)}
+.cat-btn:hover{border-color:var(--g)}
+.cat-btn span{display:block;font-size:15px;margin-bottom:2px}
+.modal-actions{display:flex;gap:7px;margin-top:16px}
+
+/* ── FAB ── */
+.fab{position:fixed;bottom:22px;right:22px;width:46px;height:46px;border-radius:50%;background:var(--g);color:#fff;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(30,107,85,0.4);transition:transform .15s,background .15s;z-index:50}
+.fab:hover{transform:scale(1.08);background:var(--g2)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:9px 17px;border-radius:20px;font-size:12.5px;font-weight:500;opacity:0;transition:all .25s;z-index:200;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── DEMO BANNER ── */
+.demo-banner{background:linear-gradient(135deg,var(--navy),#0f2a42);color:#fff;text-align:center;padding:8px 16px;font-size:12px;letter-spacing:.03em}
+.demo-banner span{color:var(--amber);font-weight:600}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .app-frame{flex-direction:column;min-height:auto}
+  .sidebar{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px}
+  .sidebar-logo,.sidebar-user{display:none}
+  .sidebar-nav{flex-direction:row;padding:4px;flex:1}
+  .nav-label{display:none}
+  .nav-item{padding:6px 8px;font-size:11px;gap:4px;flex:1;justify-content:center}
+  .nav-item svg{display:none}
+  .sidebar-bottom{display:none}
+  .two-col{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .scenario-grid{grid-template-columns:1fr}
+  .balance-split{grid-template-columns:1fr}
+  .cat-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="demo-banner">
+  <span>FinWise Demo</span> &nbsp;·&nbsp; Vista preliminar para socio &nbsp;·&nbsp; Datos de prueba
+</div>
+
+<div class="app-wrap">
+<div class="app-frame">
+
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">
+          <svg viewBox="0 0 18 18" fill="none">
+            <path d="M9 2L14 6V12L9 16L4 12V6L9 2Z" fill="white" opacity="0.9"/>
+            <path d="M9 5L12 7.5V11L9 13.5L6 11V7.5L9 5Z" fill="white" opacity="0.4"/>
+          </svg>
+        </div>
+        <span class="logo-text">FinWise</span>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="avatar">AG</div>
+      <div class="user-info"><p>Ana García</p><span>Plan Premium</span></div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-label">Principal</div>
+      <button class="nav-item active" onclick="navigate('dashboard',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v7H2V2zm7 0h5v4H9V2zM2 11h5v3H2v-3zm7-3h5v6H9V8z"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="navigate('ingresos',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.75 9.5H5v-1h3.75v1zM11 8.5H5v-1h6v1zm0-2H5v-1h6v1z"/></svg>
+        Ingresos
+      </button>
+      <button class="nav-item" onclick="navigate('gastos',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4a1 1 0 011-1zm0 3v6h12V6H2zm2 2h2v2H4V8zm4 0h4v1H8V8z"/></svg>
+        Gastos
+        <span class="nav-badge">!</span>
+      </button>
+      <button class="nav-item" onclick="navigate('metas',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a3 3 0 100 6 3 3 0 000-6zm0 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+        Metas
+      </button>
+      <div class="nav-label" style="margin-top:6px">Modo Pareja</div>
+      <button class="nav-item" onclick="navigate('pareja',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 4a2 2 0 100 4 2 2 0 000-4zm6 0a2 2 0 100 4 2 2 0 000-4zm-6 5c-2 0-4 1-4 3h8c0-2-2-3-4-3zm6 0c-.4 0-.8.06-1.2.17A4 4 0 0113 12h3c0-2-2-3-4-3z"/></svg>
+        Pareja
+      </button>
+      <div class="nav-label" style="margin-top:6px">Cuenta</div>
+      <button class="nav-item" onclick="navigate('perfil',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a3 3 0 100 6 3 3 0 000-6zm-5 8c0-1.1 2.2-2 5-2s5 .9 5 2v2H3V9z"/></svg>
+        Perfil
+      </button>
+    </div>
+    <div class="sidebar-bottom">
+      <button class="nav-item" style="color:rgba(255,255,255,0.35);font-size:12px">
+        <svg viewBox="0 0 16 16" fill="currentColor" style="width:13px;height:13px"><path d="M8 1a3 3 0 100 6 3 3 0 000-6zm-5 8c0-1.1 2.2-2 5-2s5 .9 5 2v2H3V9z"/></svg>
+        analystspear@gmail.com
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h2 id="page-title">Dashboard</h2>
+        <p id="page-sub">Enero 2025 &nbsp;·&nbsp; Hola, Ana 👋</p>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M6 2h4v2H6V2zM3 5h10v1H3V5zm1 2h8v7H4V7zm2 1v5h1V8H6zm3 0v5h1V8H9z"/></svg>
+          Enero 2025
+        </button>
+        <button class="btn btn-primary" onclick="openModal()">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+          Agregar gasto
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══════════════ DASHBOARD ══════════════ -->
+      <div id="page-dashboard" class="page active">
+        <div class="balance-hero">
+          <div class="balance-label">BALANCE DISPONIBLE · ENERO 2025</div>
+          <div class="balance-amount">$350.00</div>
+          <div class="balance-row">
+            <div class="health-pill">
+              <div class="health-dot" style="background:#5DCAA5"></div>
+              Salud financiera: Buena
+            </div>
+            <div class="vs-month">vs mes anterior <span>+$45 (14.8%)</span></div>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Ingresos</div>
+            <div class="stat-value text-green">$1,800</div>
+            <div class="stat-sub">Fijo mensual</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Gastos</div>
+            <div class="stat-value text-ink">$1,450</div>
+            <div class="stat-sub">80.6% del ingreso</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Cap. ahorro</div>
+            <div class="stat-value text-green">$280</div>
+            <div class="stat-sub">Recomendado 80%</div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="section-title">Metas activas <a onclick="navigate('metas',null)">Ver todas →</a></div>
+            <div class="meta-card">
+              <div class="meta-header">
+                <div class="meta-emoji">✈️</div>
+                <div class="meta-name">Viaje a Colombia</div>
+                <div class="meta-badge badge-green">Viable</div>
+              </div>
+              <div class="progress-track"><div class="progress-fill fill-green" style="width:18%"></div></div>
+              <div class="meta-footer"><span>$450 de $2,500</span><span>8 meses</span></div>
+            </div>
+            <div class="meta-card">
+              <div class="meta-header">
+                <div class="meta-emoji">🏠</div>
+                <div class="meta-name">Fondo de emergencia</div>
+                <div class="meta-badge badge-amber">Ajustado</div>
+              </div>
+              <div class="progress-track"><div class="progress-fill fill-amber" style="width:42%"></div></div>
+              <div class="meta-footer"><span>$2,520 de $6,000</span><span>12 meses</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title">Recomendaciones</div>
+            <div class="rec-card">
+              <div class="rec-icon" style="background:#E8F4F1">
+                <svg viewBox="0 0 16 16" fill="#1E6B55"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a1 1 0 010 2 1 1 0 010-2zm-1 4h2v4H7V8z"/></svg>
+              </div>
+              <div style="flex:1">
+                <div class="rec-title">Tienes margen disponible</div>
+                <div class="rec-desc">Con $100 extra al mes llegarías a tu meta 1.5 meses antes.</div>
+                <div class="rec-impact text-green">Impacto: +$100/mes</div>
+                <div class="rec-actions">
+                  <button class="rec-btn" onclick="showToast('¡Marcada como útil!')">Fue útil</button>
+                  <button class="rec-btn" onclick="showToast('Recomendación descartada')">No relevante</button>
+                </div>
+              </div>
+            </div>
+            <div class="rec-card">
+              <div class="rec-icon" style="background:#FDEDEB">
+                <svg viewBox="0 0 16 16" fill="#C0392B"><path d="M8 1L1 14h14L8 1zm0 3l5.3 9H2.7L8 4zm-1 3v3h2V7H7zm0 4v2h2v-2H7z"/></svg>
+              </div>
+              <div style="flex:1">
+                <div class="rec-title">Entretenimiento elevado</div>
+                <div class="rec-desc">Este mes llevas 50% más de lo usual. ¿Fue algo puntual?</div>
+                <div class="rec-impact text-red">$90 vs $60 promedio</div>
+                <div class="rec-actions">
+                  <button class="rec-btn" onclick="navigate('gastos',null);showToast('Revisando gastos...')">Revisar gastos</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card one-col">
+          <div class="section-title">Últimas transacciones</div>
+          <div class="txn-item">
+            <div class="txn-icon">🛒</div>
+            <div class="txn-info"><div class="txn-name">Mercado semanal</div><div class="txn-cat">Alimentación · 15 ene</div></div>
+            <div class="txn-amount text-red">-$85.50</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon">💼</div>
+            <div class="txn-info"><div class="txn-name">Salario enero</div><div class="txn-cat">Ingreso · 1 ene</div></div>
+            <div class="txn-amount text-green">+$1,800</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon">🎬</div>
+            <div class="txn-info"><div class="txn-name">Netflix</div><div class="txn-cat">Entretenimiento · 12 ene</div></div>
+            <div class="txn-amount text-red">-$18.00</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon">🚌</div>
+            <div class="txn-info"><div class="txn-name">Transporte metro</div><div class="txn-cat">Transporte · 10 ene</div></div>
+            <div class="txn-amount text-red">-$42.00</div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon">💊</div>
+            <div class="txn-info"><div class="txn-name">Farmacia</div><div class="txn-cat">Salud · 8 ene</div></div>
+            <div class="txn-amount text-red">-$28.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ INGRESOS ══════════════ -->
+      <div id="page-ingresos" class="page">
+        <div class="income-total-hero">
+          <div><p>TOTAL INGRESOS ENERO</p><h3>$2,300</h3></div>
+          <div><p>vs mes anterior</p><span>+$200 (9.5%)</span></div>
+        </div>
+        <div class="section-title" style="margin-bottom:9px">Fuentes de ingreso</div>
+        <div class="income-source-card">
+          <div class="income-source-icon">💼</div>
+          <div class="income-source-info">
+            <div class="income-source-name">Salario Empresa XYZ</div>
+            <div class="income-source-meta">Fijo · Mensual &nbsp;<span class="type-badge type-fixed">Fijo</span></div>
+          </div>
+          <div style="text-align:right">
+            <div class="income-source-amount">$1,800</div>
+            <div class="income-source-freq">/ mes</div>
+          </div>
+        </div>
+        <div class="income-source-card">
+          <div class="income-source-icon">💻</div>
+          <div class="income-source-info">
+            <div class="income-source-name">Freelance Diseño</div>
+            <div class="income-source-meta">Variable · Irregular &nbsp;<span class="type-badge type-var">Variable</span></div>
+            <div style="font-size:10.5px;color:var(--ink3);margin-top:3px">Promedio 3 meses: $466</div>
+          </div>
+          <div style="text-align:right">
+            <div class="income-source-amount">$500</div>
+            <div class="income-source-freq">este mes</div>
+          </div>
+        </div>
+        <div class="income-source-card" style="border-style:dashed;cursor:pointer;justify-content:center;color:var(--g);gap:8px" onclick="showToast('Formulario de ingreso abierto')">
+          <svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span style="font-size:13.5px;font-weight:500">Agregar fuente de ingreso</span>
+        </div>
+        <div style="margin-top:15px">
+          <div class="section-title">Historial mensual</div>
+          <div class="card">
+            <div style="display:flex;align-items:flex-end;gap:8px;height:75px;padding:0 4px">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                <div style="font-size:9px;color:var(--ink4)">$2,100</div>
+                <div style="width:100%;border-radius:4px 4px 0 0;background:rgba(30,107,85,0.18);height:62px"></div>
+                <div style="font-size:9.5px;color:var(--ink3)">Oct</div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                <div style="font-size:9px;color:var(--ink4)">$1,900</div>
+                <div style="width:100%;border-radius:4px 4px 0 0;background:rgba(30,107,85,0.18);height:56px"></div>
+                <div style="font-size:9.5px;color:var(--ink3)">Nov</div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                <div style="font-size:9px;color:var(--ink4)">$2,100</div>
+                <div style="width:100%;border-radius:4px 4px 0 0;background:rgba(30,107,85,0.18);height:62px"></div>
+                <div style="font-size:9.5px;color:var(--ink3)">Dic</div>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+                <div style="font-size:9px;color:var(--ink2);font-weight:600">$2,300</div>
+                <div style="width:100%;border-radius:4px 4px 0 0;background:var(--g);height:68px"></div>
+                <div style="font-size:9.5px;color:var(--g);font-weight:600">Ene</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ GASTOS ══════════════ -->
+      <div id="page-gastos" class="page">
+        <div class="alert-banner">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L1 14h14L8 1zm0 3l5.3 9H2.7L8 4zm-1 3v3h2V7H7zm0 4v2h2v-2H7z"/></svg>
+          <div class="alert-text"><strong>Entretenimiento al 90% del límite:</strong> Llevas $90 de $100. Cuida este gasto.</div>
+        </div>
+        <div class="stats-row" style="margin-bottom:13px">
+          <div class="stat-card">
+            <div class="stat-label">Total gastos</div>
+            <div class="stat-value text-ink">$1,450</div>
+            <div class="stat-sub">+$70 vs mes anterior</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Mayor categoría</div>
+            <div class="stat-value" style="font-size:15px">🏠 Vivienda</div>
+            <div class="stat-sub">$600 · 41.4%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">En riesgo</div>
+            <div class="stat-value text-amber">1 categ.</div>
+            <div class="stat-sub">Entretenimiento al 90%</div>
+          </div>
+        </div>
+        <div class="section-title">Por categoría</div>
+        <div class="cat-grid">
+          <div class="cat-item">
+            <div class="cat-header"><span class="cat-icon">🏠</span><span class="cat-name">Vivienda</span><span class="cat-pct">41%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:100%;background:rgba(30,107,85,0.25)"></div></div>
+            <div class="cat-amounts"><span>Sin límite</span><strong>$600.00</strong></div>
+          </div>
+          <div class="cat-item">
+            <div class="cat-header"><span class="cat-icon">🛒</span><span class="cat-name">Alimentación</span><span class="cat-pct">24%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--red)"></div></div>
+            <div class="cat-amounts"><span style="color:var(--red)">+$50 del límite</span><strong>$350.00</strong></div>
+          </div>
+          <div class="cat-item">
+            <div class="cat-header"><span class="cat-icon">🚌</span><span class="cat-name">Transporte</span><span class="cat-pct">11%</span></div>
+            <div class="progress-track"><div class="progress-fill fill-green" style="width:64%"></div></div>
+            <div class="cat-amounts"><span>$160 de $250</span><strong>$160.00</strong></div>
+          </div>
+          <div class="cat-item">
+            <div class="cat-header"><span class="cat-icon">🎬</span><span class="cat-name">Entretenimiento</span><span class="cat-pct">6%</span></div>
+            <div class="progress-track"><div class="progress-fill fill-amber" style="width:90%"></div></div>
+            <div class="cat-amounts"><span style="color:var(--amber)">⚠ $90 de $100</span><strong>$90.00</strong></div>
+          </div>
+          <div class="cat-item">
+            <div class="cat-header"><span class="cat-icon">💊</span><span class="cat-name">Salud</span><span class="cat-pct">4%</span></div>
+            <div class="progress-track"><div class="progress-fill fill-green" style="width:37%"></div></div>
+            <div class="cat-amounts"><span>$55 de $150</span><strong>$55.00</strong></div>
+          </div>
+          <div class="cat-item">
+            <div class="cat-header"><span class="cat-icon">📦</span><span class="cat-name">Otros</span><span class="cat-pct">13%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:50%;background:var(--ink4)"></div></div>
+            <div class="cat-amounts"><span>Sin límite</span><strong>$195.00</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ METAS ══════════════ -->
+      <div id="page-metas" class="page">
+        <div class="goal-detail-card">
+          <div class="goal-big-header">
+            <div class="goal-big-emoji">✈️</div>
+            <div class="goal-big-info">
+              <div class="goal-big-name">Viaje a Colombia</div>
+              <div class="goal-big-sub">Meta: $2,500 · Nov 2025 · <span style="color:var(--g);font-weight:500">Viable ✓</span></div>
+            </div>
+            <div class="meta-badge badge-green" style="font-size:10.5px;padding:4px 10px">$250/mes</div>
+          </div>
+          <div class="goal-progress-row">
+            <div class="goal-pct">18%</div>
+            <div class="goal-progress-info">
+              <div class="goal-progress-track"><div class="goal-progress-fill" style="width:18%"></div></div>
+              <div style="font-size:10.5px;color:var(--ink3)">$450 ahorrados de $2,500 · 8 meses restantes</div>
+            </div>
+          </div>
+          <div class="section-title" style="margin-bottom:7px;font-size:12px">Simulador de escenarios</div>
+          <div class="scenario-grid">
+            <div class="scenario-card selected" onclick="selectScenario(this)">
+              <div class="scenario-label">Plazo original</div>
+              <div class="scenario-amount">$250</div>
+              <div class="scenario-date">Nov 2025</div>
+              <div class="scenario-tag">Actual</div>
+            </div>
+            <div class="scenario-card" onclick="selectScenario(this)">
+              <div class="scenario-label">Aporte +20%</div>
+              <div class="scenario-amount">$300</div>
+              <div class="scenario-date">Sep 2025</div>
+              <div class="scenario-tag">-1.5 meses</div>
+            </div>
+            <div class="scenario-card" onclick="selectScenario(this)">
+              <div class="scenario-label">Extender 3 meses</div>
+              <div class="scenario-amount">$200</div>
+              <div class="scenario-date">Feb 2026</div>
+              <div class="scenario-tag">-$50/mes</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:7px;margin-top:13px">
+            <button class="btn btn-primary" style="flex:1" onclick="showToast('Aporte de $250 registrado ✓')">Registrar aporte</button>
+            <button class="btn btn-ghost" onclick="showToast('Formulario de edición abierto')">Editar meta</button>
+          </div>
+        </div>
+        <div class="goal-detail-card">
+          <div class="goal-big-header">
+            <div class="goal-big-emoji">🏠</div>
+            <div class="goal-big-info">
+              <div class="goal-big-name">Fondo de emergencia</div>
+              <div class="goal-big-sub">Meta: $6,000 · Dic 2025 · <span style="color:var(--amber);font-weight:500">Ajustado ⚠</span></div>
+            </div>
+            <div class="meta-badge badge-amber" style="font-size:10.5px;padding:4px 10px">$305/mes</div>
+          </div>
+          <div class="goal-progress-row">
+            <div class="goal-pct" style="color:var(--amber)">42%</div>
+            <div class="goal-progress-info">
+              <div class="goal-progress-track"><div class="goal-progress-fill" style="width:42%;background:var(--amber)"></div></div>
+              <div style="font-size:10.5px;color:var(--ink3)">$2,520 ahorrados de $6,000 · 12 meses restantes</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:7px;margin-top:10px">
+            <button class="btn btn-primary" style="flex:1" onclick="showToast('Aporte de $305 registrado ✓')">Registrar aporte</button>
+            <button class="btn btn-ghost" onclick="showToast('Formulario de edición abierto')">Editar meta</button>
+          </div>
+        </div>
+        <div class="card" style="text-align:center;padding:18px;border-style:dashed;cursor:pointer" onclick="showToast('Formulario de nueva meta abierto')">
+          <div style="font-size:26px;margin-bottom:7px">🎯</div>
+          <div style="font-size:13.5px;font-weight:500;color:var(--g)">Crear nueva meta</div>
+          <div style="font-size:11.5px;color:var(--ink3);margin-top:3px">Agrega una meta y calcula cuánto necesitas apartar cada mes</div>
+        </div>
+      </div>
+
+      <!-- ══════════════ PAREJA ══════════════ -->
+      <div id="page-pareja" class="page">
+        <div class="couple-header">
+          <div class="couple-avatars">
+            <div class="avatar">AG</div>
+            <div class="avatar">CM</div>
+          </div>
+          <div class="couple-info">
+            <h3>Ana &amp; Carlos</h3>
+            <p>Proyecto Casa 2025 · Activo desde Nov 2024</p>
+          </div>
+          <div class="couple-rule">Proporcional 61% / 39%</div>
+        </div>
+        <div class="owed-banner">
+          <svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px;color:#7A5200;flex-shrink:0"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zM7 9h2v2H7V9zm0-4h2v3H7V5z"/></svg>
+          <div class="owed-text">Carlos pagó de más este mes. <strong>Ana le debe $183.50</strong> según la regla proporcional.</div>
+          <button class="settle-btn" onclick="showToast('Deuda marcada como saldada ✓')">Marcar saldado</button>
+        </div>
+        <div class="balance-split">
+          <div class="person-card">
+            <div class="person-card-header">
+              <div class="avatar" style="width:29px;height:29px;font-size:10px">AG</div>
+              <div class="person-card-name">Ana</div>
+            </div>
+            <div class="person-paid text-ink">$400.00</div>
+            <div class="person-expected">Esperado: $583.50 (39%)</div>
+            <div class="person-diff badge-red" style="color:#8B2019">Pagó $183.50 de menos</div>
+          </div>
+          <div class="person-card">
+            <div class="person-card-header">
+              <div class="avatar" style="width:29px;height:29px;font-size:10px;background:#6C3483">CM</div>
+              <div class="person-card-name">Carlos</div>
+            </div>
+            <div class="person-paid text-ink">$1,100.00</div>
+            <div class="person-expected">Esperado: $916.50 (61%)</div>
+            <div class="person-diff badge-green" style="color:var(--g2)">Pagó $183.50 de más</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:11px">
+          <div class="section-title">Gastos compartidos · Enero 2025</div>
+          <div class="txn-item">
+            <div class="txn-icon">🏠</div>
+            <div class="txn-info"><div class="txn-name">Alquiler enero</div><div class="txn-cat">Pagó: Carlos · 61%/39%</div></div>
+            <div style="text-align:right"><div class="txn-amount text-ink">$900.00</div><div style="font-size:10px;color:var(--ink3)">Ana: $351 · Carlos: $549</div></div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon">💡</div>
+            <div class="txn-info"><div class="txn-name">Servicios (luz, agua, internet)</div><div class="txn-cat">Pagó: Ana · 61%/39%</div></div>
+            <div style="text-align:right"><div class="txn-amount text-ink">$200.00</div><div style="font-size:10px;color:var(--ink3)">Ana: $78 · Carlos: $122</div></div>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon">🛒</div>
+            <div class="txn-info"><div class="txn-name">Supermercado</div><div class="txn-cat">Pagó: Carlos · 61%/39%</div></div>
+            <div style="text-align:right"><div class="txn-amount text-ink">$400.00</div><div style="font-size:10px;color:var(--ink3)">Ana: $156 · Carlos: $244</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Meta conjunta</div>
+          <div class="meta-card">
+            <div class="meta-header">
+              <div class="meta-emoji">🏠</div>
+              <div class="meta-name">Fondo de emergencia familiar</div>
+              <div class="meta-badge badge-amber">Ajustado</div>
+            </div>
+            <div class="progress-track"><div class="progress-fill fill-amber" style="width:42%"></div></div>
+            <div class="meta-footer"><span>Ana: $195/mes · Carlos: $305/mes</span><span>$2,520 / $6,000</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════ PERFIL ══════════════ -->
+      <div id="page-perfil" class="page">
+        <div class="card" style="margin-bottom:11px">
+          <div style="display:flex;align-items:center;gap:13px;margin-bottom:15px">
+            <div class="avatar" style="width:50px;height:50px;font-size:17px">AG</div>
+            <div>
+              <div style="font-size:16px;font-weight:600">Ana García</div>
+              <div style="font-size:12px;color:var(--g);font-weight:500;margin-top:2px">Plan Premium · Activo</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+            <div><div class="form-label">País</div><div style="font-size:13.5px">🇵🇦 Panamá</div></div>
+            <div><div class="form-label">Moneda</div><div style="font-size:13.5px">USD ($)</div></div>
+            <div><div class="form-label">Tipo ingreso</div><div style="font-size:13.5px">Mixto</div></div>
+            <div><div class="form-label">Miembro desde</div><div style="font-size:13.5px">Nov 2024</div></div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:11px">
+          <div class="section-title" style="margin-bottom:11px">Límites de categorías</div>
+          <div class="txn-item"><div class="txn-info"><div class="txn-name">🛒 Alimentación</div></div><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;color:var(--ink3)">$300/mes</span><button class="rec-btn" onclick="showToast('Límite actualizado')">Editar</button></div></div>
+          <div class="txn-item"><div class="txn-info"><div class="txn-name">🎬 Entretenimiento</div></div><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;color:var(--amber)">$100/mes ⚠</span><button class="rec-btn" onclick="showToast('Límite actualizado')">Editar</button></div></div>
+          <div class="txn-item" style="border:none"><div class="txn-info"><div class="txn-name">🚌 Transporte</div></div><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;color:var(--ink3)">$250/mes</span><button class="rec-btn" onclick="showToast('Límite actualizado')">Editar</button></div></div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-bottom:11px">Notificaciones</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:13px">Alertas de límite de categoría</span>
+              <div onclick="showToast('Guardado')" style="width:34px;height:19px;border-radius:10px;background:var(--g);position:relative;cursor:pointer"><div style="position:absolute;right:2px;top:2px;width:15px;height:15px;border-radius:50%;background:#fff"></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:13px">Recordatorios de metas</span>
+              <div onclick="showToast('Guardado')" style="width:34px;height:19px;border-radius:10px;background:var(--g);position:relative;cursor:pointer"><div style="position:absolute;right:2px;top:2px;width:15px;height:15px;border-radius:50%;background:#fff"></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:13px">Resumen mensual por email</span>
+              <div onclick="showToast('Guardado')" style="width:34px;height:19px;border-radius:10px;background:var(--surface3);position:relative;cursor:pointer"><div style="position:absolute;left:2px;top:2px;width:15px;height:15px;border-radius:50%;background:#fff;border:0.5px solid var(--border2)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app-frame -->
+</div><!-- /app-wrap -->
+
+<!-- FAB -->
+<button class="fab" onclick="openModal()" title="Agregar gasto">+</button>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOnOverlay(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Agregar gasto rápido</div>
+    <div class="form-group">
+      <label class="form-label">Monto</label>
+      <input class="form-input" type="number" placeholder="$0.00" id="gasto-monto" style="font-size:20px;font-weight:600;padding:11px">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Categoría</label>
+      <div class="cat-grid-mini">
+        <button class="cat-btn selected" onclick="selectCat(this)"><span>🛒</span>Aliment.</button>
+        <button class="cat-btn" onclick="selectCat(this)"><span>🚌</span>Transp.</button>
+        <button class="cat-btn" onclick="selectCat(this)"><span>🎬</span>Entret.</button>
+        <button class="cat-btn" onclick="selectCat(this)"><span>💊</span>Salud</button>
+        <button class="cat-btn" onclick="selectCat(this)"><span>👗</span>Ropa</button>
+        <button class="cat-btn" onclick="selectCat(this)"><span>📚</span>Educac.</button>
+        <button class="cat-btn" onclick="selectCat(this)"><span>⚡</span>Servic.</button>
+        <button class="cat-btn" onclick="selectCat(this)"><span>📦</span>Otros</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Descripción</label>
+        <input class="form-input" type="text" placeholder="ej: Mercado semanal">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Fecha</label>
+        <input class="form-input" type="date" id="fecha-gasto">
+      </div>
+    </div>
+    <div style="margin-top:11px;display:flex;align-items:center;gap:9px">
+      <input type="checkbox" id="shared-check" style="width:15px;height:15px;accent-color:var(--g)">
+      <label for="shared-check" style="font-size:12.5px;cursor:pointer">Gasto compartido con Carlos</label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveGasto()">Guardar gasto</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const pages={
+  dashboard:{title:'Dashboard',sub:'Enero 2025\u00a0\u00b7\u00a0Hola, Ana \ud83d\udc4b'},
+  ingresos:{title:'Ingresos',sub:'Enero 2025\u00a0\u00b7\u00a0Total mensual actualizado'},
+  gastos:{title:'Gastos',sub:'Enero 2025\u00a0\u00b7\u00a01 alerta activa'},
+  metas:{title:'Metas',sub:'2 metas activas\u00a0\u00b7\u00a0Capacidad de ahorro: $280/mes'},
+  pareja:{title:'Modo Pareja',sub:'Ana & Carlos\u00a0\u00b7\u00a0Proporcional 61% / 39%'},
+  perfil:{title:'Perfil',sub:'Ana Garc\u00eda\u00a0\u00b7\u00a0Plan Premium'}
+};
+
+function navigate(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  if(el)el.classList.add('active');
+  const info=pages[id]||{title:id,sub:''};
+  document.getElementById('page-title').textContent=info.title;
+  document.getElementById('page-sub').textContent=info.sub;
+}
+
+function openModal(){
+  document.getElementById('modal').classList.add('open');
+  const d=new Date();
+  document.getElementById('fecha-gasto').value=d.toISOString().split('T')[0];
+  setTimeout(()=>document.getElementById('gasto-monto').focus(),120);
+}
+
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+
+function closeModalOnOverlay(e){if(e.target===document.getElementById('modal'))closeModal()}
+
+function saveGasto(){
+  const m=parseFloat(document.getElementById('gasto-monto').value);
+  if(!m||m<=0){showToast('Ingresa un monto v\u00e1lido');return;}
+  closeModal();
+  document.getElementById('gasto-monto').value='';
+  showToast('Gasto de $'+m.toFixed(2)+' registrado \u2713');
+}
+
+function selectCat(btn){
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function selectScenario(card){
+  document.querySelectorAll('.scenario-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+}
+
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+</script>
+</body>
+</html>
