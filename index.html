@@ -3,268 +3,414 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FinWise — Demo</title>
+<title>FinWise — Tu plataforma financiera</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --g:#1E6B55;--g2:#155444;--g-light:#E8F4F1;--g-pale:#F0FAF7;
-  --navy:#1A3C5E;--amber:#F0A500;--amber-light:#FFF8E1;
-  --red:#C0392B;--red-light:#FDEDEB;--yellow:#E6A817;--yellow-light:#FFFBEB;
+  --g:#1E6B55;--g2:#155444;--g3:#0d3a2e;
+  --g-light:#E8F4F1;--g-pale:#F0FAF7;
+  --navy:#1A3C5E;--navy2:#0f2a42;
+  --amber:#F0A500;--amber-light:#FFF8E1;
+  --red:#C0392B;--red-light:#FDEDEB;
   --ink:#1C1C1E;--ink2:#3A3A3C;--ink3:#636366;--ink4:#AEAEB2;
   --surface:#FFFFFF;--surface2:#F5F7FA;--surface3:#ECEEF2;
   --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
   --radius:14px;--radius-sm:8px;--radius-lg:20px;
-  --shadow:0 2px 16px rgba(0,0,0,0.07);--shadow-md:0 4px 24px rgba(0,0,0,0.10);
+  --shadow:0 2px 16px rgba(0,0,0,0.07);--shadow-md:0 4px 28px rgba(0,0,0,0.11);
 }
-html,body{height:100%;font-family:'DM Sans',sans-serif;background:#E8ECF2;color:var(--ink)}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:#DDE2EA;color:var(--ink)}
 
-/* ── LAYOUT ── */
-.app-wrap{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px 12px}
-.app-frame{
-  display:flex;width:100%;max-width:1080px;min-height:680px;
-  border-radius:var(--radius-lg);overflow:hidden;
-  border:0.5px solid var(--border2);box-shadow:var(--shadow-md);
+/* ─── SCREENS ─── */
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* ─── ONBOARDING ─── */
+#screen-onboarding{
+  align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy) 60%,#1a5c47 100%);
+  padding:24px;
+}
+.onb-card{
+  background:var(--surface);border-radius:24px;
+  width:100%;max-width:480px;overflow:hidden;
+  box-shadow:var(--shadow-md);
+}
+.onb-header{
+  background:linear-gradient(135deg,var(--navy),#1a5c47);
+  padding:28px 28px 22px;color:#fff;
+}
+.onb-logo{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.logo-icon{width:36px;height:36px;background:var(--g);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:20px;height:20px}
+.logo-text{font-size:22px;font-weight:600;letter-spacing:-0.5px}
+.onb-progress{display:flex;gap:6px;margin-bottom:18px}
+.onb-step-dot{height:4px;flex:1;border-radius:4px;background:rgba(255,255,255,0.2);transition:background .3s}
+.onb-step-dot.done{background:rgba(255,255,255,0.9)}
+.onb-step-dot.active{background:var(--amber)}
+.onb-title{font-size:20px;font-weight:600;margin-bottom:4px}
+.onb-sub{font-size:13px;color:rgba(255,255,255,0.62)}
+.onb-body{padding:24px 28px 28px}
+
+.step{display:none}.step.active{display:block}
+
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:6px;display:block;letter-spacing:.02em}
+.form-label span{color:var(--ink4);font-weight:400}
+.form-input{
+  width:100%;padding:10px 13px;border-radius:var(--radius-sm);
+  border:1px solid var(--border2);background:var(--surface2);
+  font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);
+  outline:none;transition:border-color .15s,background .15s;
+}
+.form-input:focus{border-color:var(--g);background:var(--surface)}
+.form-input.error{border-color:var(--red)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-select{
+  width:100%;padding:10px 13px;border-radius:var(--radius-sm);
+  border:1px solid var(--border2);background:var(--surface2);
+  font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);
+  outline:none;cursor:pointer;
+}
+.form-select:focus{border-color:var(--g)}
+
+.toggle-group{display:flex;gap:8px;flex-wrap:wrap}
+.toggle-btn{
+  padding:7px 14px;border-radius:20px;border:1px solid var(--border2);
+  background:var(--surface2);font-size:13px;font-family:'DM Sans',sans-serif;
+  color:var(--ink2);cursor:pointer;transition:all .15s;font-weight:400;
+}
+.toggle-btn.active{background:var(--g);color:#fff;border-color:var(--g);font-weight:500}
+
+.field-error{font-size:11px;color:var(--red);margin-top:4px;display:none}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 20px;border-radius:var(--radius-sm);
+  font-size:14px;font-weight:500;cursor:pointer;border:none;
+  transition:all .15s;font-family:'DM Sans',sans-serif;
+}
+.btn-primary{background:var(--g);color:#fff;width:100%}
+.btn-primary:hover{background:var(--g2)}
+.btn-ghost{background:transparent;color:var(--ink2);border:1px solid var(--border2)}
+.btn-ghost:hover{background:var(--surface2)}
+.btn-sm{padding:7px 14px;font-size:12.5px}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{background:#a02e24}
+.btn svg{width:14px;height:14px}
+
+.onb-actions{display:flex;gap:10px;margin-top:22px}
+.onb-actions .btn-ghost{flex:0 0 auto;padding:11px 16px}
+
+/* income line items */
+.income-line,.expense-line,.goal-line{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface2);border-radius:var(--radius-sm);
+  padding:10px 12px;margin-bottom:8px;border:1px solid var(--border);
+}
+.income-line-info,.expense-line-info,.goal-line-info{flex:1;min-width:0}
+.income-line-name,.expense-line-name,.goal-line-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.income-line-sub,.expense-line-sub,.goal-line-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.income-line-amount,.expense-line-amount,.goal-line-amount{font-size:14px;font-weight:600;color:var(--g);white-space:nowrap}
+.expense-line-amount{color:var(--red)}
+.goal-line-amount{color:var(--navy)}
+.line-del{background:none;border:none;color:var(--ink4);cursor:pointer;padding:2px 4px;border-radius:4px;font-size:16px;line-height:1;flex-shrink:0}
+.line-del:hover{color:var(--red);background:var(--red-light)}
+
+.add-line-form{
+  background:var(--g-pale);border:1px dashed var(--g);border-radius:var(--radius-sm);
+  padding:14px;margin-top:8px;display:none;
+}
+.add-line-form.visible{display:block}
+.add-trigger{
+  display:flex;align-items:center;gap:7px;color:var(--g);
+  background:none;border:1px dashed var(--border2);border-radius:var(--radius-sm);
+  padding:9px 14px;cursor:pointer;font-size:13px;font-weight:500;
+  font-family:'DM Sans',sans-serif;width:100%;transition:all .15s;
+  margin-top:6px;
+}
+.add-trigger:hover{border-color:var(--g);background:var(--g-pale)}
+
+.couple-toggle{
+  display:flex;align-items:center;gap:12px;
+  background:var(--surface2);border-radius:var(--radius-sm);
+  padding:14px;border:1px solid var(--border);cursor:pointer;
+  margin-bottom:14px;
+}
+.switch{
+  width:42px;height:24px;background:var(--surface3);border-radius:12px;
+  position:relative;transition:background .2s;flex-shrink:0;
+}
+.switch.on{background:var(--g)}
+.switch::after{
+  content:'';position:absolute;left:3px;top:3px;
+  width:18px;height:18px;border-radius:50%;background:#fff;
+  transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,0.2);
+}
+.switch.on::after{transform:translateX(18px)}
+
+/* ─── APP SHELL ─── */
+#screen-app{
+  flex-direction:column;
   background:var(--surface2);
 }
+.app-layout{display:flex;flex:1;overflow:hidden;height:calc(100vh - 0px)}
 
-/* ── SIDEBAR ── */
-.sidebar{width:215px;min-width:215px;background:var(--navy);display:flex;flex-direction:column}
-.sidebar-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
-.logo-mark{display:flex;align-items:center;gap:8px}
-.logo-icon{width:32px;height:32px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center}
-.logo-icon svg{width:17px;height:17px}
-.logo-text{font-size:19px;font-weight:600;color:#fff;letter-spacing:-0.5px}
-.sidebar-user{padding:12px 15px;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(255,255,255,0.08)}
-.avatar{width:32px;height:32px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
-.user-info p{font-size:12.5px;font-weight:500;color:#fff}
-.user-info span{font-size:11px;color:rgba(255,255,255,0.4)}
-.sidebar-nav{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:2px}
-.nav-label{font-size:10px;font-weight:500;color:rgba(255,255,255,0.28);letter-spacing:.08em;text-transform:uppercase;padding:10px 10px 4px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s;color:rgba(255,255,255,0.52);font-size:13px;font-weight:400;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
-.nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.82)}
+/* sidebar */
+.sidebar{
+  width:218px;min-width:218px;background:var(--navy);
+  display:flex;flex-direction:column;height:100%;overflow-y:auto;
+}
+.sb-logo{padding:20px 18px 15px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sb-logo-row{display:flex;align-items:center;gap:8px}
+.sb-logo-icon{width:32px;height:32px;background:var(--g);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.sb-logo-icon svg{width:17px;height:17px}
+.sb-logo-text{font-size:19px;font-weight:600;color:#fff;letter-spacing:-0.5px}
+.sb-user{
+  padding:12px 16px;display:flex;align-items:center;gap:9px;
+  border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;
+  transition:background .15s;
+}
+.sb-user:hover{background:rgba(255,255,255,0.05)}
+.avatar{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;font-weight:600;color:#fff;flex-shrink:0;
+  background:var(--g);
+}
+.avatar.partner{background:#6C3483}
+.sb-user-info{flex:1;min-width:0}
+.sb-user-name{font-size:13px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-plan{font-size:10.5px;color:rgba(255,255,255,0.4)}
+.sb-nav{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:1px}
+.nav-section{font-size:10px;font-weight:500;color:rgba(255,255,255,0.28);letter-spacing:.08em;text-transform:uppercase;padding:10px 10px 4px}
+.nav-item{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;
+  border-radius:var(--radius-sm);cursor:pointer;
+  color:rgba(255,255,255,0.52);font-size:13px;font-weight:400;
+  border:none;background:none;width:100%;text-align:left;
+  font-family:'DM Sans',sans-serif;transition:background .15s,color .15s;
+}
+.nav-item:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.84)}
 .nav-item.active{background:var(--g);color:#fff;font-weight:500}
-.nav-item svg{width:15px;height:15px;flex-shrink:0}
-.nav-badge{margin-left:auto;background:var(--amber);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:20px}
-.sidebar-bottom{padding:10px 8px;border-top:1px solid rgba(255,255,255,0.08)}
+.nav-item svg{width:15px;height:15px;flex-shrink:0;opacity:.85}
+.nav-badge{margin-left:auto;background:var(--amber);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px}
+.sb-bottom{padding:10px 8px;border-top:1px solid rgba(255,255,255,0.08)}
 
-/* ── MAIN ── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--surface2)}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:var(--surface);border-bottom:0.5px solid var(--border)}
-.topbar-left h2{font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.3px}
-.topbar-left p{font-size:12px;color:var(--ink3);margin-top:2px}
+/* topbar */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 22px;background:var(--surface);
+  border-bottom:0.5px solid var(--border);flex-shrink:0;
+}
+.topbar h2{font-size:17px;font-weight:600;letter-spacing:-.3px}
+.topbar p{font-size:12px;color:var(--ink3);margin-top:1px}
 .topbar-right{display:flex;align-items:center;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:500;cursor:pointer;border:none;transition:all .15s;font-family:'DM Sans',sans-serif}
-.btn-primary{background:var(--g);color:#fff}
-.btn-primary:hover{background:var(--g2)}
-.btn-ghost{background:transparent;color:var(--ink2);border:0.5px solid var(--border2)}
-.btn-ghost:hover{background:var(--surface2)}
-.btn svg{width:13px;height:13px}
-.content{flex:1;overflow-y:auto;padding:18px 22px 26px}
 
-/* ── PAGES ── */
+/* content */
+.content{flex:1;overflow-y:auto;padding:20px 22px 32px}
 .page{display:none}.page.active{display:block}
 
-/* ── DASHBOARD ── */
-.balance-hero{background:linear-gradient(135deg,var(--navy) 0%,#254e78 100%);border-radius:var(--radius);padding:20px 22px;color:#fff;margin-bottom:14px;position:relative;overflow:hidden}
-.balance-hero::before{content:'';position:absolute;top:-28px;right:-28px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.04)}
-.balance-hero::after{content:'';position:absolute;bottom:-18px;right:55px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.03)}
-.balance-label{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:3px;letter-spacing:.04em}
-.balance-amount{font-size:36px;font-weight:600;letter-spacing:-1px;margin-bottom:2px}
-.balance-row{display:flex;align-items:center;gap:10px;margin-top:12px}
-.health-pill{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.12);border-radius:20px;padding:5px 11px;font-size:11.5px;font-weight:500}
+/* ─── DASHBOARD ─── */
+.balance-hero{
+  background:linear-gradient(135deg,var(--navy) 0%,#254e78 100%);
+  border-radius:var(--radius);padding:20px 22px;color:#fff;
+  margin-bottom:14px;position:relative;overflow:hidden;
+}
+.balance-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.03)}
+.bal-label{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:3px;letter-spacing:.04em}
+.bal-amount{font-size:38px;font-weight:600;letter-spacing:-1.5px;margin-bottom:4px}
+.bal-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.health-pill{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,0.13);border-radius:20px;
+  padding:5px 12px;font-size:12px;font-weight:500;
+}
 .health-dot{width:7px;height:7px;border-radius:50%}
-.vs-month{font-size:11.5px;color:rgba(255,255,255,0.48)}
-.vs-month span{color:#5DCAA5;font-weight:500}
 
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .stat-card{background:var(--surface);border-radius:var(--radius);padding:13px 15px;border:0.5px solid var(--border)}
-.stat-label{font-size:10.5px;color:var(--ink3);margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:.03em}
-.stat-value{font-size:19px;font-weight:600;letter-spacing:-.4px}
+.stat-lbl{font-size:10.5px;color:var(--ink3);margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:.03em}
+.stat-val{font-size:19px;font-weight:600;letter-spacing:-.5px}
 .stat-sub{font-size:10.5px;color:var(--ink4);margin-top:2px}
-.text-green{color:var(--g)}.text-red{color:var(--red)}.text-amber{color:var(--amber)}.text-ink{color:var(--ink)}
+.tc-green{color:var(--g)}.tc-red{color:var(--red)}.tc-amber{color:var(--amber)}.tc-ink{color:var(--ink)}
 
-.section-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:9px;letter-spacing:-.2px;display:flex;align-items:center;justify-content:space-between}
-.section-title a{font-size:12px;font-weight:400;color:var(--g);cursor:pointer;text-decoration:none}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px}
-.one-col{margin-bottom:14px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:15px}
+.sec-title{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:9px;display:flex;align-items:center;justify-content:space-between}
+.sec-title a{font-size:12px;font-weight:400;color:var(--g);cursor:pointer;text-decoration:none}
+.sec-title a:hover{text-decoration:underline}
 
-/* meta cards */
-.meta-card{margin-bottom:9px}.meta-card:last-child{margin-bottom:0}
-.meta-header{display:flex;align-items:center;gap:7px;margin-bottom:7px}
-.meta-emoji{font-size:17px;line-height:1}
-.meta-name{font-size:13px;font-weight:500;flex:1}
-.meta-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
-.badge-green{background:var(--g-light);color:var(--g2)}
-.badge-amber{background:var(--amber-light);color:#7A5200}
-.badge-red{background:var(--red-light);color:#8B2019}
-.progress-track{height:5px;background:var(--surface3);border-radius:10px;overflow:hidden;margin-bottom:5px}
-.progress-fill{height:100%;border-radius:10px;transition:width .6s ease}
-.fill-green{background:var(--g)}.fill-amber{background:var(--amber)}.fill-red{background:var(--red)}
+/* meta mini */
+.meta-mini{margin-bottom:9px}.meta-mini:last-child{margin-bottom:0}
+.meta-mini-header{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.meta-mini-name{font-size:13px;font-weight:500;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mbadge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
+.mbadge-green{background:var(--g-light);color:var(--g2)}
+.mbadge-amber{background:var(--amber-light);color:#7A5200}
+.mbadge-red{background:var(--red-light);color:#8B2019}
+.prog-track{height:5px;background:var(--surface3);border-radius:10px;overflow:hidden;margin-bottom:5px}
+.prog-fill{height:100%;border-radius:10px;transition:width .6s ease}
+.pf-green{background:var(--g)}.pf-amber{background:var(--amber)}.pf-red{background:var(--red)}
 .meta-footer{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink3)}
-
-/* rec cards */
-.rec-card{display:flex;gap:11px;align-items:flex-start;padding:11px;border-radius:var(--radius-sm);background:var(--surface2);margin-bottom:7px;border:0.5px solid var(--border)}
-.rec-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.rec-icon svg{width:15px;height:15px}
-.rec-title{font-size:12.5px;font-weight:500;margin-bottom:2px}
-.rec-desc{font-size:11.5px;color:var(--ink3);line-height:1.4}
-.rec-impact{font-size:10.5px;font-weight:600;margin-top:3px}
-.rec-actions{display:flex;gap:5px;margin-top:7px}
-.rec-btn{font-size:11px;padding:4px 9px;border-radius:20px;border:0.5px solid var(--border2);background:var(--surface);cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink2);transition:background .12s}
-.rec-btn:hover{background:var(--g-light);color:var(--g2);border-color:var(--g)}
+.meta-empty{text-align:center;padding:16px 0;color:var(--ink4);font-size:12.5px}
 
 /* txns */
 .txn-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:0.5px solid var(--border)}
 .txn-item:last-child{border-bottom:none;padding-bottom:0}
 .txn-icon{width:32px;height:32px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.txn-info{flex:1}
-.txn-name{font-size:12.5px;font-weight:500}
+.txn-info{flex:1;min-width:0}
+.txn-name{font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .txn-cat{font-size:10.5px;color:var(--ink3)}
-.txn-amount{font-size:13.5px;font-weight:600}
+.txn-amount{font-size:13.5px;font-weight:600;white-space:nowrap}
+.txn-empty{text-align:center;padding:16px 0;color:var(--ink4);font-size:12.5px}
 
-/* ── INGRESOS ── */
-.income-total-hero{background:var(--g);border-radius:var(--radius);padding:17px 20px;color:#fff;margin-bottom:13px;display:flex;align-items:center;justify-content:space-between}
-.income-total-hero div:first-child p{font-size:11px;color:rgba(255,255,255,0.58)}
-.income-total-hero div:first-child h3{font-size:28px;font-weight:600;letter-spacing:-1px}
-.income-total-hero div:last-child{text-align:right}
-.income-total-hero div:last-child p{font-size:10.5px;color:rgba(255,255,255,0.58)}
-.income-total-hero div:last-child span{font-size:14px;font-weight:500;color:#A8E8D4}
-.income-source-card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:13px 15px;display:flex;align-items:center;gap:11px;margin-bottom:7px}
-.income-source-icon{width:36px;height:36px;border-radius:9px;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.income-source-info{flex:1}
-.income-source-name{font-size:13.5px;font-weight:500}
-.income-source-meta{font-size:10.5px;color:var(--ink3);margin-top:1px}
-.income-source-amount{font-size:16px;font-weight:600;color:var(--g)}
-.income-source-freq{font-size:10px;color:var(--ink3);text-align:right;margin-top:1px}
-.type-badge{font-size:9.5px;font-weight:500;padding:2px 6px;border-radius:20px;display:inline-block;margin-top:2px}
-.type-fixed{background:var(--g-light);color:var(--g2)}
-.type-var{background:var(--amber-light);color:#7A5200}
+/* ─── INGRESOS ─── */
+.income-hero{
+  background:var(--g);border-radius:var(--radius);
+  padding:17px 20px;color:#fff;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.income-hero h3{font-size:28px;font-weight:600;letter-spacing:-1px}
+.income-hero p{font-size:11px;color:rgba(255,255,255,0.6)}
+.income-hero .sub{font-size:13px;font-weight:500;color:#A8E8D4}
 
-/* ── GASTOS ── */
-.alert-banner{background:var(--red-light);border:0.5px solid rgba(192,57,43,0.2);border-radius:var(--radius-sm);padding:9px 13px;display:flex;gap:9px;align-items:flex-start;margin-bottom:13px}
-.alert-banner svg{width:15px;height:15px;color:var(--red);flex-shrink:0;margin-top:1px}
-.alert-text{font-size:12px;color:#7B1C12;line-height:1.4}
-.alert-text strong{font-weight:600}
-.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
-.cat-item{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:13px}
-.cat-header{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+/* ─── GASTOS ─── */
+.alert-banner{
+  background:var(--red-light);border:0.5px solid rgba(192,57,43,0.2);
+  border-radius:var(--radius-sm);padding:10px 14px;
+  display:flex;gap:9px;align-items:center;margin-bottom:12px;
+}
+.alert-banner svg{width:15px;height:15px;color:var(--red);flex-shrink:0}
+.alert-text{font-size:12px;color:#7B1C12;line-height:1.4;flex:1}
+
+.cat-summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:14px}
+.cat-card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:13px}
+.cat-card-header{display:flex;align-items:center;gap:7px;margin-bottom:6px}
 .cat-icon{font-size:17px}
 .cat-name{font-size:12.5px;font-weight:500;flex:1}
 .cat-pct{font-size:10.5px;color:var(--ink3)}
 .cat-amounts{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-top:3px}
 .cat-amounts strong{color:var(--ink)}
+.no-gastos{text-align:center;padding:32px 0;color:var(--ink4)}
 
-/* ── METAS ── */
-.goal-detail-card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:17px;margin-bottom:11px}
-.goal-big-header{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
-.goal-big-emoji{font-size:30px;line-height:1}
-.goal-big-info{flex:1}
-.goal-big-name{font-size:16px;font-weight:600;letter-spacing:-.3px}
-.goal-big-sub{font-size:11.5px;color:var(--ink3);margin-top:2px}
-.goal-progress-row{display:flex;align-items:center;gap:9px;margin-bottom:11px}
-.goal-pct{font-size:26px;font-weight:600;color:var(--g);letter-spacing:-1px;min-width:56px}
-.goal-progress-info{flex:1}
-.goal-progress-track{height:7px;border-radius:10px;background:var(--surface3);overflow:hidden;margin-bottom:3px}
-.goal-progress-fill{height:100%;border-radius:10px;background:var(--g)}
-.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.scenario-card{background:var(--surface2);border-radius:var(--radius-sm);border:0.5px solid var(--border);padding:11px;text-align:center;cursor:pointer;transition:all .15s}
-.scenario-card.selected{border-color:var(--g);background:var(--g-pale)}
-.scenario-card:hover{border-color:var(--g)}
-.scenario-label{font-size:9.5px;color:var(--ink3);margin-bottom:3px}
-.scenario-amount{font-size:15px;font-weight:600;color:var(--ink)}
-.scenario-date{font-size:10.5px;color:var(--ink3);margin-top:2px}
-.scenario-tag{font-size:9.5px;color:var(--g);font-weight:500;margin-top:3px}
+/* ─── METAS ─── */
+.goal-card{
+  background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);
+  padding:17px;margin-bottom:11px;
+}
+.goal-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.goal-emoji-big{font-size:30px;line-height:1}
+.goal-info{flex:1;min-width:0}
+.goal-name{font-size:16px;font-weight:600;letter-spacing:-.3px}
+.goal-sub{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.goal-prog-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.goal-pct-big{font-size:26px;font-weight:600;color:var(--g);letter-spacing:-1px;min-width:54px}
+.goal-prog-info{flex:1}
+.goal-prog-track{height:7px;border-radius:10px;background:var(--surface3);overflow:hidden;margin-bottom:3px}
+.goal-prog-fill{height:100%;border-radius:10px;background:var(--g)}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.sc-card{background:var(--surface2);border-radius:var(--radius-sm);border:0.5px solid var(--border);padding:10px;text-align:center;cursor:pointer;transition:all .15s}
+.sc-card.sel{border-color:var(--g);background:var(--g-pale)}
+.sc-card:hover{border-color:var(--g)}
+.sc-label{font-size:9.5px;color:var(--ink3);margin-bottom:3px}
+.sc-amount{font-size:15px;font-weight:600}
+.sc-date{font-size:10.5px;color:var(--ink3);margin-top:2px}
+.sc-tag{font-size:9.5px;color:var(--g);font-weight:500;margin-top:3px}
+.goal-actions{display:flex;gap:8px}
 
-/* ── PAREJA ── */
-.couple-header{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.couple-avatars{display:flex}
-.couple-avatars .avatar{border:2px solid var(--surface)}
-.couple-avatars .avatar:last-child{margin-left:-9px;background:#6C3483}
-.couple-info h3{font-size:15px;font-weight:600}
-.couple-info p{font-size:11.5px;color:var(--ink3);margin-top:2px}
+/* aporte history */
+.aporte-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:12.5px}
+.aporte-item:last-child{border-bottom:none}
+.aporte-date{color:var(--ink3);flex:1}
+.aporte-amount{font-weight:600;color:var(--g)}
+
+/* ─── PAREJA ─── */
+.couple-header-card{
+  background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);
+  padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:12px;
+}
+.couple-avs{display:flex}
+.couple-avs .avatar{border:2px solid var(--surface)}
+.couple-avs .avatar:last-child{margin-left:-9px}
 .couple-rule{margin-left:auto;background:var(--g-light);color:var(--g2);font-size:10.5px;font-weight:500;padding:4px 11px;border-radius:20px;white-space:nowrap}
-.balance-split{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
-.person-card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:14px}
-.person-card-header{display:flex;align-items:center;gap:7px;margin-bottom:9px}
-.person-card-name{font-size:13.5px;font-weight:600}
-.person-paid{font-size:20px;font-weight:600;letter-spacing:-.4px;margin-bottom:2px}
-.person-expected{font-size:10.5px;color:var(--ink3)}
-.person-diff{display:inline-flex;align-items:center;gap:3px;margin-top:7px;font-size:10.5px;font-weight:500;padding:3px 7px;border-radius:20px}
-.owed-banner{background:var(--amber-light);border:0.5px solid rgba(240,165,0,0.25);border-radius:var(--radius-sm);padding:11px 15px;display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.owed-banner{
+  background:var(--amber-light);border:0.5px solid rgba(240,165,0,0.25);
+  border-radius:var(--radius-sm);padding:11px 15px;
+  display:flex;align-items:center;gap:9px;margin-bottom:12px;
+}
 .owed-text{font-size:12.5px;color:#6B4A00;flex:1}
-.owed-text strong{font-weight:600}
-.settle-btn{background:var(--amber);color:#fff;border:none;padding:6px 13px;border-radius:var(--radius-sm);font-size:11.5px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;white-space:nowrap}
+.settle-btn{background:var(--amber);color:#fff;border:none;padding:7px 14px;border-radius:var(--radius-sm);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;white-space:nowrap}
 .settle-btn:hover{background:#C88B00}
+.balance-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.person-card{background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:14px}
+.pc-header{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.pc-name{font-size:13.5px;font-weight:600}
+.pc-paid{font-size:20px;font-weight:600;letter-spacing:-.4px;margin-bottom:2px}
+.pc-exp{font-size:10.5px;color:var(--ink3)}
+.pc-diff{display:inline-flex;align-items:center;margin-top:7px;font-size:10.5px;font-weight:500;padding:3px 8px;border-radius:20px}
+.no-couple{text-align:center;padding:40px 20px}
+.no-couple p{font-size:13px;color:var(--ink3);margin-top:8px;line-height:1.6}
 
-/* ── PERFIL ── */
-/* (shares card styles) */
-
-/* ── MODAL ── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.38);z-index:100;align-items:flex-end;justify-content:center}
+/* ─── MODAL ─── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
 .modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:22px;width:100%;max-width:520px;animation:slideUp .22s ease}
 @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-handle{width:34px;height:4px;background:var(--surface3);border-radius:4px;margin:0 auto 16px}
 .modal-title{font-size:16px;font-weight:600;margin-bottom:16px;letter-spacing:-.3px}
-.form-group{margin-bottom:13px}
-.form-label{font-size:11.5px;font-weight:500;color:var(--ink2);margin-bottom:5px;display:block}
-.form-input{width:100%;padding:9px 11px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--surface2);font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color .15s}
-.form-input:focus{border-color:var(--g);background:var(--surface)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.cat-grid-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:3px}
-.cat-btn{background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:7px 3px;font-size:10.5px;text-align:center;cursor:pointer;transition:all .12s;font-family:'DM Sans',sans-serif;color:var(--ink2)}
-.cat-btn.selected{background:var(--g-light);border-color:var(--g);color:var(--g2)}
-.cat-btn:hover{border-color:var(--g)}
+.modal-actions{display:flex;gap:8px;margin-top:18px}
+.cat-grid-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.cat-btn{background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:7px 3px;font-size:10px;text-align:center;cursor:pointer;transition:all .12s;font-family:'DM Sans',sans-serif;color:var(--ink2)}
+.cat-btn.sel{background:var(--g-light);border-color:var(--g);color:var(--g2)}
 .cat-btn span{display:block;font-size:15px;margin-bottom:2px}
-.modal-actions{display:flex;gap:7px;margin-top:16px}
 
-/* ── FAB ── */
+/* ─── FAB ─── */
 .fab{position:fixed;bottom:22px;right:22px;width:46px;height:46px;border-radius:50%;background:var(--g);color:#fff;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(30,107,85,0.4);transition:transform .15s,background .15s;z-index:50}
 .fab:hover{transform:scale(1.08);background:var(--g2)}
 
-/* ── TOAST ── */
-.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:9px 17px;border-radius:20px;font-size:12.5px;font-weight:500;opacity:0;transition:all .25s;z-index:200;white-space:nowrap;pointer-events:none}
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:9px 17px;border-radius:20px;font-size:12.5px;font-weight:500;opacity:0;transition:all .25s;z-index:200;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ── DEMO BANNER ── */
-.demo-banner{background:linear-gradient(135deg,var(--navy),#0f2a42);color:#fff;text-align:center;padding:8px 16px;font-size:12px;letter-spacing:.03em}
-.demo-banner span{color:var(--amber);font-weight:600}
+/* ─── PERFIL ─── */
+.profile-section{margin-bottom:14px}
+.toggle-switch-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.toggle-switch-row:last-child{border-bottom:none}
+.ts-label{font-size:13px}
+.ts-switch{width:36px;height:20px;border-radius:10px;background:var(--surface3);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.ts-switch.on{background:var(--g)}
+.ts-switch::after{content:'';position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,0.2)}
+.ts-switch.on::after{transform:translateX(16px)}
 
-/* ── RESPONSIVE ── */
-@media(max-width:700px){
-  .app-frame{flex-direction:column;min-height:auto}
-  .sidebar{width:100%;flex-direction:row;flex-wrap:wrap;padding:8px}
-  .sidebar-logo,.sidebar-user{display:none}
-  .sidebar-nav{flex-direction:row;padding:4px;flex:1}
-  .nav-label{display:none}
-  .nav-item{padding:6px 8px;font-size:11px;gap:4px;flex:1;justify-content:center}
-  .nav-item svg{display:none}
-  .sidebar-bottom{display:none}
+/* ─── RESPONSIVE ─── */
+@media(max-width:720px){
+  .sidebar{width:100%;min-width:auto;height:auto;flex-direction:row;flex-wrap:wrap}
+  .sb-logo,.sb-user,.sb-bottom,.nav-section{display:none}
+  .sb-nav{flex-direction:row;padding:4px 6px;overflow-x:auto}
+  .nav-item{flex-direction:column;gap:2px;font-size:10px;padding:6px 8px;flex-shrink:0}
+  .nav-item svg{width:17px;height:17px}
+  .app-layout{flex-direction:column}
   .two-col{grid-template-columns:1fr}
   .stats-row{grid-template-columns:1fr 1fr}
-  .scenario-grid{grid-template-columns:1fr}
   .balance-split{grid-template-columns:1fr}
-  .cat-grid{grid-template-columns:1fr}
+  .scenario-grid{grid-template-columns:1fr}
+  .cat-summary-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<div class="demo-banner">
-  <span>FinWise Demo</span> &nbsp;·&nbsp; Vista preliminar para socio &nbsp;·&nbsp; Datos de prueba
-</div>
-
-<div class="app-wrap">
-<div class="app-frame">
-
-  <!-- ══ SIDEBAR ══ -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-mark">
+<!-- ══════════════════════════════════════════
+     SCREEN: ONBOARDING
+══════════════════════════════════════════ -->
+<div id="screen-onboarding" class="screen active">
+  <div class="onb-card">
+    <div class="onb-header">
+      <div class="onb-logo">
         <div class="logo-icon">
           <svg viewBox="0 0 18 18" fill="none">
             <path d="M9 2L14 6V12L9 16L4 12V6L9 2Z" fill="white" opacity="0.9"/>
@@ -273,535 +419,661 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:#E8ECF2;color:
         </div>
         <span class="logo-text">FinWise</span>
       </div>
+      <div class="onb-progress" id="onb-dots"></div>
+      <div class="onb-title" id="onb-title">Bienvenido a FinWise</div>
+      <div class="onb-sub" id="onb-sub">Configura tu perfil financiero en 4 pasos</div>
     </div>
-    <div class="sidebar-user">
-      <div class="avatar">AG</div>
-      <div class="user-info"><p>Ana García</p><span>Plan Premium</span></div>
-    </div>
-    <div class="sidebar-nav">
-      <div class="nav-label">Principal</div>
-      <button class="nav-item active" onclick="navigate('dashboard',this)">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v7H2V2zm7 0h5v4H9V2zM2 11h5v3H2v-3zm7-3h5v6H9V8z"/></svg>
-        Dashboard
-      </button>
-      <button class="nav-item" onclick="navigate('ingresos',this)">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.75 9.5H5v-1h3.75v1zM11 8.5H5v-1h6v1zm0-2H5v-1h6v1z"/></svg>
-        Ingresos
-      </button>
-      <button class="nav-item" onclick="navigate('gastos',this)">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4a1 1 0 011-1zm0 3v6h12V6H2zm2 2h2v2H4V8zm4 0h4v1H8V8z"/></svg>
-        Gastos
-        <span class="nav-badge">!</span>
-      </button>
-      <button class="nav-item" onclick="navigate('metas',this)">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a3 3 0 100 6 3 3 0 000-6zm0 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
-        Metas
-      </button>
-      <div class="nav-label" style="margin-top:6px">Modo Pareja</div>
-      <button class="nav-item" onclick="navigate('pareja',this)">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 4a2 2 0 100 4 2 2 0 000-4zm6 0a2 2 0 100 4 2 2 0 000-4zm-6 5c-2 0-4 1-4 3h8c0-2-2-3-4-3zm6 0c-.4 0-.8.06-1.2.17A4 4 0 0113 12h3c0-2-2-3-4-3z"/></svg>
-        Pareja
-      </button>
-      <div class="nav-label" style="margin-top:6px">Cuenta</div>
-      <button class="nav-item" onclick="navigate('perfil',this)">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a3 3 0 100 6 3 3 0 000-6zm-5 8c0-1.1 2.2-2 5-2s5 .9 5 2v2H3V9z"/></svg>
-        Perfil
-      </button>
-    </div>
-    <div class="sidebar-bottom">
-      <button class="nav-item" style="color:rgba(255,255,255,0.35);font-size:12px">
-        <svg viewBox="0 0 16 16" fill="currentColor" style="width:13px;height:13px"><path d="M8 1a3 3 0 100 6 3 3 0 000-6zm-5 8c0-1.1 2.2-2 5-2s5 .9 5 2v2H3V9z"/></svg>
-        analystspear@gmail.com
-      </button>
+    <div class="onb-body">
+
+      <!-- PASO 1: Perfil -->
+      <div class="step active" id="step-1">
+        <div class="form-group">
+          <label class="form-label">Tu nombre completo</label>
+          <input class="form-input" id="inp-name" type="text" placeholder="ej: Ana García">
+          <div class="field-error" id="err-name">Por favor ingresa tu nombre</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">País</label>
+            <select class="form-select" id="inp-country">
+              <option value="PA">🇵🇦 Panamá</option>
+              <option value="CO">🇨🇴 Colombia</option>
+              <option value="MX">🇲🇽 México</option>
+              <option value="CR">🇨🇷 Costa Rica</option>
+              <option value="GT">🇬🇹 Guatemala</option>
+              <option value="PE">🇵🇪 Perú</option>
+              <option value="CL">🇨🇱 Chile</option>
+              <option value="AR">🇦🇷 Argentina</option>
+              <option value="EC">🇪🇨 Ecuador</option>
+              <option value="VE">🇻🇪 Venezuela</option>
+              <option value="DO">🇩🇴 Rep. Dominicana</option>
+              <option value="US">🇺🇸 Estados Unidos</option>
+              <option value="OTHER">🌎 Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Moneda</label>
+            <select class="form-select" id="inp-currency">
+              <option value="USD">$ USD</option>
+              <option value="COP">$ COP</option>
+              <option value="MXN">$ MXN</option>
+              <option value="CRC">₡ CRC</option>
+              <option value="GTQ">Q GTQ</option>
+              <option value="PEN">S/ PEN</option>
+              <option value="CLP">$ CLP</option>
+              <option value="ARS">$ ARS</option>
+              <option value="EUR">€ EUR</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de ingreso principal</label>
+          <div class="toggle-group" id="income-type-toggle">
+            <button class="toggle-btn active" data-val="fixed">Salario fijo</button>
+            <button class="toggle-btn" data-val="variable">Freelance / variable</button>
+            <button class="toggle-btn" data-val="mixed">Mixto</button>
+            <button class="toggle-btn" data-val="informal">Informal</button>
+          </div>
+        </div>
+
+        <!-- Modo pareja toggle -->
+        <div class="couple-toggle" onclick="toggleCouple()">
+          <div>
+            <div style="font-size:13.5px;font-weight:500">Activar Modo Pareja</div>
+            <div style="font-size:11.5px;color:var(--ink3);margin-top:2px">Gestiona finanzas con tu pareja juntos</div>
+          </div>
+          <div class="switch" id="couple-switch"></div>
+        </div>
+        <div id="couple-name-section" style="display:none">
+          <div class="form-group">
+            <label class="form-label">Nombre de tu pareja</label>
+            <input class="form-input" id="inp-partner" type="text" placeholder="ej: Carlos Martínez">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Regla de distribución de gastos compartidos</label>
+            <div class="toggle-group" id="rule-toggle">
+              <button class="toggle-btn active" data-val="equal">50/50</button>
+              <button class="toggle-btn" data-val="proportional">Proporcional</button>
+              <button class="toggle-btn" data-val="custom">Personalizado</button>
+            </div>
+          </div>
+          <div id="custom-pct-section" style="display:none">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Tu % <span id="my-pct-label">(50%)</span></label>
+                <input class="form-input" id="inp-pct-a" type="number" min="1" max="99" value="50" oninput="syncPct()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">% de tu pareja <span id="partner-pct-label">(50%)</span></label>
+                <input class="form-input" id="inp-pct-b" type="number" min="1" max="99" value="50" disabled style="opacity:.6">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASO 2: Ingresos -->
+      <div class="step" id="step-2">
+        <div style="font-size:13px;color:var(--ink3);margin-bottom:14px">
+          Agrega tus fuentes de ingreso. Puedes agregar varias.
+        </div>
+        <div id="income-list"></div>
+        <button class="add-trigger" onclick="showAddIncome()">
+          <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Agregar fuente de ingreso
+        </button>
+        <div class="add-line-form" id="add-income-form">
+          <div class="form-group">
+            <label class="form-label">Nombre del ingreso</label>
+            <input class="form-input" id="new-inc-name" type="text" placeholder="ej: Salario, Freelance, Renta...">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Monto mensual</label>
+              <input class="form-input" id="new-inc-amount" type="number" placeholder="0.00" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tipo</label>
+              <select class="form-select" id="new-inc-type">
+                <option value="fixed">Fijo</option>
+                <option value="variable">Variable</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-primary" style="flex:1;padding:9px" onclick="addIncome()">Agregar</button>
+            <button class="btn btn-ghost btn-sm" onclick="hideAddIncome()">Cancelar</button>
+          </div>
+        </div>
+        <div id="income-empty" style="text-align:center;padding:20px 0;color:var(--ink4);font-size:12.5px;display:none">
+          Agrega al menos una fuente de ingreso para continuar
+        </div>
+      </div>
+
+      <!-- PASO 3: Gastos fijos -->
+      <div class="step" id="step-3">
+        <div style="font-size:13px;color:var(--ink3);margin-bottom:14px">
+          Agrega tus gastos fijos del mes (alquiler, servicios, deudas, etc.)
+        </div>
+        <div id="expense-list-onb"></div>
+        <button class="add-trigger" onclick="showAddExpenseOnb()">
+          <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Agregar gasto fijo
+        </button>
+        <div class="add-line-form" id="add-expense-onb-form">
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <input class="form-input" id="new-exp-name-onb" type="text" placeholder="ej: Alquiler, Internet, Gym...">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Monto mensual</label>
+              <input class="form-input" id="new-exp-amount-onb" type="number" placeholder="0.00" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Categoría</label>
+              <select class="form-select" id="new-exp-cat-onb">
+                <option value="🏠 Vivienda">🏠 Vivienda</option>
+                <option value="🚌 Transporte">🚌 Transporte</option>
+                <option value="⚡ Servicios">⚡ Servicios</option>
+                <option value="💳 Deudas">💳 Deudas</option>
+                <option value="📱 Teléfono">📱 Teléfono</option>
+                <option value="📚 Educación">📚 Educación</option>
+                <option value="💊 Salud">💊 Salud</option>
+                <option value="📦 Otros">📦 Otros</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-primary" style="flex:1;padding:9px" onclick="addExpenseOnb()">Agregar</button>
+            <button class="btn btn-ghost btn-sm" onclick="hideAddExpenseOnb()">Cancelar</button>
+          </div>
+        </div>
+        <!-- balance preview -->
+        <div id="balance-preview" style="margin-top:16px;background:var(--g-pale);border:1px solid var(--g-light);border-radius:var(--radius-sm);padding:12px;display:none">
+          <div style="font-size:11px;color:var(--ink3);margin-bottom:2px">BALANCE ESTIMADO DEL MES</div>
+          <div id="balance-preview-amount" style="font-size:22px;font-weight:600;letter-spacing:-.5px"></div>
+          <div id="balance-preview-sub" style="font-size:11.5px;color:var(--ink3);margin-top:2px"></div>
+        </div>
+      </div>
+
+      <!-- PASO 4: Meta opcional -->
+      <div class="step" id="step-4">
+        <div style="font-size:13px;color:var(--ink3);margin-bottom:16px">
+          ¿Tienes alguna meta de ahorro? <span style="color:var(--ink4)">(opcional)</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nombre de tu meta <span>(ej: Vacaciones, Fondo de emergencia...)</span></label>
+          <input class="form-input" id="inp-goal-name" type="text" placeholder="ej: Viaje a Europa">
+        </div>
+        <div id="goal-detail-section" style="display:none">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Monto objetivo</label>
+              <input class="form-input" id="inp-goal-amount" type="number" placeholder="0.00" min="0" step="0.01" oninput="calcGoalPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fecha objetivo</label>
+              <input class="form-input" id="inp-goal-date" type="date" onchange="calcGoalPreview()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Emoji / ícono <span>(opcional)</span></label>
+            <div class="toggle-group">
+              <button class="toggle-btn active" data-emoji="🎯" onclick="selectEmoji(this)">🎯</button>
+              <button class="toggle-btn" data-emoji="✈️" onclick="selectEmoji(this)">✈️</button>
+              <button class="toggle-btn" data-emoji="🏠" onclick="selectEmoji(this)">🏠</button>
+              <button class="toggle-btn" data-emoji="🚗" onclick="selectEmoji(this)">🚗</button>
+              <button class="toggle-btn" data-emoji="💍" onclick="selectEmoji(this)">💍</button>
+              <button class="toggle-btn" data-emoji="📱" onclick="selectEmoji(this)">📱</button>
+              <button class="toggle-btn" data-emoji="💰" onclick="selectEmoji(this)">💰</button>
+              <button class="toggle-btn" data-emoji="🎓" onclick="selectEmoji(this)">🎓</button>
+            </div>
+          </div>
+          <div id="goal-preview" style="display:none;background:var(--g-pale);border:1px solid var(--g-light);border-radius:var(--radius-sm);padding:12px;margin-top:4px">
+            <div style="font-size:11px;color:var(--ink3);margin-bottom:4px">RESUMEN DE TU META</div>
+            <div id="goal-preview-content" style="font-size:13.5px;color:var(--ink);line-height:1.7"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="onb-actions">
+        <button class="btn btn-ghost" id="btn-back" onclick="onbBack()" style="display:none">← Atrás</button>
+        <button class="btn btn-primary" id="btn-next" onclick="onbNext()">Continuar →</button>
+      </div>
+      <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--ink4)">
+        Tus datos se guardan localmente en tu dispositivo. Privacidad garantizada.
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- ══ MAIN ══ -->
-  <div class="main">
-    <div class="topbar">
-      <div class="topbar-left">
-        <h2 id="page-title">Dashboard</h2>
-        <p id="page-sub">Enero 2025 &nbsp;·&nbsp; Hola, Ana 👋</p>
+<!-- ══════════════════════════════════════════
+     SCREEN: APP
+══════════════════════════════════════════ -->
+<div id="screen-app" class="screen">
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-logo">
+        <div class="sb-logo-row">
+          <div class="sb-logo-icon">
+            <svg viewBox="0 0 18 18" fill="none">
+              <path d="M9 2L14 6V12L9 16L4 12V6L9 2Z" fill="white" opacity="0.9"/>
+              <path d="M9 5L12 7.5V11L9 13.5L6 11V7.5L9 5Z" fill="white" opacity="0.4"/>
+            </svg>
+          </div>
+          <span class="sb-logo-text">FinWise</span>
+        </div>
       </div>
-      <div class="topbar-right">
-        <button class="btn btn-ghost">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M6 2h4v2H6V2zM3 5h10v1H3V5zm1 2h8v7H4V7zm2 1v5h1V8H6zm3 0v5h1V8H9z"/></svg>
-          Enero 2025
+      <div class="sb-user" onclick="navigate('perfil',null)">
+        <div class="avatar" id="sb-avatar-me">AG</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="sb-name-me">Ana García</div>
+          <div class="sb-user-plan">Plan gratuito</div>
+        </div>
+      </div>
+      <div class="sb-nav">
+        <div class="nav-section">Principal</div>
+        <button class="nav-item active" onclick="navigate('dashboard',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v7H2V2zm7 0h5v4H9V2zM2 11h5v3H2v-3zm7-3h5v6H9V8z"/></svg>
+          Dashboard
         </button>
-        <button class="btn btn-primary" onclick="openModal()">
-          <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-          Agregar gasto
+        <button class="nav-item" onclick="navigate('ingresos',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.75 9.5H5v-1h3.75v1zM11 8.5H5v-1h6v1zm0-2H5v-1h6v1z"/></svg>
+          Ingresos
+        </button>
+        <button class="nav-item" onclick="navigate('gastos',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 3h12a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4a1 1 0 011-1zm0 3v6h12V6H2zm2 2h2v2H4V8zm4 0h4v1H8V8z"/></svg>
+          Gastos
+          <span class="nav-badge" id="nb-alerts" style="display:none">!</span>
+        </button>
+        <button class="nav-item" onclick="navigate('metas',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zm0 2a3 3 0 100 6 3 3 0 000-6zm0 1.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>
+          Metas
+        </button>
+        <div class="nav-section" id="nav-couple-section" style="margin-top:6px;display:none">Modo Pareja</div>
+        <button class="nav-item" id="nav-pareja" onclick="navigate('pareja',this)" style="display:none">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 4a2 2 0 100 4 2 2 0 000-4zm6 0a2 2 0 100 4 2 2 0 000-4zm-6 5c-2 0-4 1-4 3h8c0-2-2-3-4-3zm6 0c-.4 0-.8.06-1.2.17A4 4 0 0113 12h3c0-2-2-3-4-3z"/></svg>
+          <span id="nav-pareja-label">Pareja</span>
+        </button>
+        <div class="nav-section" style="margin-top:6px">Cuenta</div>
+        <button class="nav-item" onclick="navigate('perfil',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a3 3 0 100 6 3 3 0 000-6zm-5 8c0-1.1 2.2-2 5-2s5 .9 5 2v2H3V9z"/></svg>
+          Perfil
+        </button>
+      </div>
+      <div class="sb-bottom">
+        <button class="nav-item" style="color:rgba(255,255,255,0.35);font-size:11.5px" onclick="confirmReset()">
+          <svg viewBox="0 0 16 16" fill="currentColor" style="width:13px;height:13px"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zM5 8h2V6h2v2h2v2H9v2H7v-2H5V8z"/></svg>
+          Reiniciar app
         </button>
       </div>
     </div>
 
-    <div class="content">
-
-      <!-- ══════════════ DASHBOARD ══════════════ -->
-      <div id="page-dashboard" class="page active">
-        <div class="balance-hero">
-          <div class="balance-label">BALANCE DISPONIBLE · ENERO 2025</div>
-          <div class="balance-amount">$350.00</div>
-          <div class="balance-row">
-            <div class="health-pill">
-              <div class="health-dot" style="background:#5DCAA5"></div>
-              Salud financiera: Buena
-            </div>
-            <div class="vs-month">vs mes anterior <span>+$45 (14.8%)</span></div>
-          </div>
+    <!-- MAIN -->
+    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+      <div class="topbar">
+        <div>
+          <h2 id="page-title">Dashboard</h2>
+          <p id="page-sub">Cargando...</p>
         </div>
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-label">Ingresos</div>
-            <div class="stat-value text-green">$1,800</div>
-            <div class="stat-sub">Fijo mensual</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Gastos</div>
-            <div class="stat-value text-ink">$1,450</div>
-            <div class="stat-sub">80.6% del ingreso</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Cap. ahorro</div>
-            <div class="stat-value text-green">$280</div>
-            <div class="stat-sub">Recomendado 80%</div>
-          </div>
-        </div>
-        <div class="two-col">
-          <div class="card">
-            <div class="section-title">Metas activas <a onclick="navigate('metas',null)">Ver todas →</a></div>
-            <div class="meta-card">
-              <div class="meta-header">
-                <div class="meta-emoji">✈️</div>
-                <div class="meta-name">Viaje a Colombia</div>
-                <div class="meta-badge badge-green">Viable</div>
-              </div>
-              <div class="progress-track"><div class="progress-fill fill-green" style="width:18%"></div></div>
-              <div class="meta-footer"><span>$450 de $2,500</span><span>8 meses</span></div>
-            </div>
-            <div class="meta-card">
-              <div class="meta-header">
-                <div class="meta-emoji">🏠</div>
-                <div class="meta-name">Fondo de emergencia</div>
-                <div class="meta-badge badge-amber">Ajustado</div>
-              </div>
-              <div class="progress-track"><div class="progress-fill fill-amber" style="width:42%"></div></div>
-              <div class="meta-footer"><span>$2,520 de $6,000</span><span>12 meses</span></div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="section-title">Recomendaciones</div>
-            <div class="rec-card">
-              <div class="rec-icon" style="background:#E8F4F1">
-                <svg viewBox="0 0 16 16" fill="#1E6B55"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 3a1 1 0 010 2 1 1 0 010-2zm-1 4h2v4H7V8z"/></svg>
-              </div>
-              <div style="flex:1">
-                <div class="rec-title">Tienes margen disponible</div>
-                <div class="rec-desc">Con $100 extra al mes llegarías a tu meta 1.5 meses antes.</div>
-                <div class="rec-impact text-green">Impacto: +$100/mes</div>
-                <div class="rec-actions">
-                  <button class="rec-btn" onclick="showToast('¡Marcada como útil!')">Fue útil</button>
-                  <button class="rec-btn" onclick="showToast('Recomendación descartada')">No relevante</button>
-                </div>
-              </div>
-            </div>
-            <div class="rec-card">
-              <div class="rec-icon" style="background:#FDEDEB">
-                <svg viewBox="0 0 16 16" fill="#C0392B"><path d="M8 1L1 14h14L8 1zm0 3l5.3 9H2.7L8 4zm-1 3v3h2V7H7zm0 4v2h2v-2H7z"/></svg>
-              </div>
-              <div style="flex:1">
-                <div class="rec-title">Entretenimiento elevado</div>
-                <div class="rec-desc">Este mes llevas 50% más de lo usual. ¿Fue algo puntual?</div>
-                <div class="rec-impact text-red">$90 vs $60 promedio</div>
-                <div class="rec-actions">
-                  <button class="rec-btn" onclick="navigate('gastos',null);showToast('Revisando gastos...')">Revisar gastos</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card one-col">
-          <div class="section-title">Últimas transacciones</div>
-          <div class="txn-item">
-            <div class="txn-icon">🛒</div>
-            <div class="txn-info"><div class="txn-name">Mercado semanal</div><div class="txn-cat">Alimentación · 15 ene</div></div>
-            <div class="txn-amount text-red">-$85.50</div>
-          </div>
-          <div class="txn-item">
-            <div class="txn-icon">💼</div>
-            <div class="txn-info"><div class="txn-name">Salario enero</div><div class="txn-cat">Ingreso · 1 ene</div></div>
-            <div class="txn-amount text-green">+$1,800</div>
-          </div>
-          <div class="txn-item">
-            <div class="txn-icon">🎬</div>
-            <div class="txn-info"><div class="txn-name">Netflix</div><div class="txn-cat">Entretenimiento · 12 ene</div></div>
-            <div class="txn-amount text-red">-$18.00</div>
-          </div>
-          <div class="txn-item">
-            <div class="txn-icon">🚌</div>
-            <div class="txn-info"><div class="txn-name">Transporte metro</div><div class="txn-cat">Transporte · 10 ene</div></div>
-            <div class="txn-amount text-red">-$42.00</div>
-          </div>
-          <div class="txn-item">
-            <div class="txn-icon">💊</div>
-            <div class="txn-info"><div class="txn-name">Farmacia</div><div class="txn-cat">Salud · 8 ene</div></div>
-            <div class="txn-amount text-red">-$28.00</div>
-          </div>
+        <div class="topbar-right">
+          <span id="topbar-month" style="font-size:12px;color:var(--ink3);background:var(--surface2);padding:5px 11px;border-radius:20px;border:0.5px solid var(--border2)"></span>
+          <button class="btn btn-primary" onclick="openGastoModal()" style="padding:8px 14px;font-size:13px">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+            Agregar gasto
+          </button>
         </div>
       </div>
 
-      <!-- ══════════════ INGRESOS ══════════════ -->
-      <div id="page-ingresos" class="page">
-        <div class="income-total-hero">
-          <div><p>TOTAL INGRESOS ENERO</p><h3>$2,300</h3></div>
-          <div><p>vs mes anterior</p><span>+$200 (9.5%)</span></div>
-        </div>
-        <div class="section-title" style="margin-bottom:9px">Fuentes de ingreso</div>
-        <div class="income-source-card">
-          <div class="income-source-icon">💼</div>
-          <div class="income-source-info">
-            <div class="income-source-name">Salario Empresa XYZ</div>
-            <div class="income-source-meta">Fijo · Mensual &nbsp;<span class="type-badge type-fixed">Fijo</span></div>
-          </div>
-          <div style="text-align:right">
-            <div class="income-source-amount">$1,800</div>
-            <div class="income-source-freq">/ mes</div>
-          </div>
-        </div>
-        <div class="income-source-card">
-          <div class="income-source-icon">💻</div>
-          <div class="income-source-info">
-            <div class="income-source-name">Freelance Diseño</div>
-            <div class="income-source-meta">Variable · Irregular &nbsp;<span class="type-badge type-var">Variable</span></div>
-            <div style="font-size:10.5px;color:var(--ink3);margin-top:3px">Promedio 3 meses: $466</div>
-          </div>
-          <div style="text-align:right">
-            <div class="income-source-amount">$500</div>
-            <div class="income-source-freq">este mes</div>
-          </div>
-        </div>
-        <div class="income-source-card" style="border-style:dashed;cursor:pointer;justify-content:center;color:var(--g);gap:8px" onclick="showToast('Formulario de ingreso abierto')">
-          <svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <span style="font-size:13.5px;font-weight:500">Agregar fuente de ingreso</span>
-        </div>
-        <div style="margin-top:15px">
-          <div class="section-title">Historial mensual</div>
-          <div class="card">
-            <div style="display:flex;align-items:flex-end;gap:8px;height:75px;padding:0 4px">
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-                <div style="font-size:9px;color:var(--ink4)">$2,100</div>
-                <div style="width:100%;border-radius:4px 4px 0 0;background:rgba(30,107,85,0.18);height:62px"></div>
-                <div style="font-size:9.5px;color:var(--ink3)">Oct</div>
-              </div>
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-                <div style="font-size:9px;color:var(--ink4)">$1,900</div>
-                <div style="width:100%;border-radius:4px 4px 0 0;background:rgba(30,107,85,0.18);height:56px"></div>
-                <div style="font-size:9.5px;color:var(--ink3)">Nov</div>
-              </div>
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-                <div style="font-size:9px;color:var(--ink4)">$2,100</div>
-                <div style="width:100%;border-radius:4px 4px 0 0;background:rgba(30,107,85,0.18);height:62px"></div>
-                <div style="font-size:9.5px;color:var(--ink3)">Dic</div>
-              </div>
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-                <div style="font-size:9px;color:var(--ink2);font-weight:600">$2,300</div>
-                <div style="width:100%;border-radius:4px 4px 0 0;background:var(--g);height:68px"></div>
-                <div style="font-size:9.5px;color:var(--g);font-weight:600">Ene</div>
+      <div class="content">
+
+        <!-- ── DASHBOARD PAGE ── -->
+        <div id="page-dashboard" class="page active">
+          <div class="balance-hero">
+            <div class="bal-label" id="dash-period-label">BALANCE DISPONIBLE</div>
+            <div class="bal-amount" id="dash-balance">$0.00</div>
+            <div class="bal-row">
+              <div class="health-pill" id="dash-health-pill">
+                <div class="health-dot" id="dash-health-dot"></div>
+                <span id="dash-health-text">Calculando...</span>
               </div>
             </div>
           </div>
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-lbl">Ingresos</div>
+              <div class="stat-val tc-green" id="dash-income">$0</div>
+              <div class="stat-sub" id="dash-income-sub">Este mes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-lbl">Gastos</div>
+              <div class="stat-val tc-ink" id="dash-expense">$0</div>
+              <div class="stat-sub" id="dash-expense-sub">Este mes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-lbl">Cap. ahorro</div>
+              <div class="stat-val tc-green" id="dash-saving">$0</div>
+              <div class="stat-sub">Recomendado 80%</div>
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <div class="sec-title">Metas activas <a onclick="navigate('metas',null)">Ver todas →</a></div>
+              <div id="dash-goals-list"></div>
+            </div>
+            <div class="card">
+              <div class="sec-title">Últimas transacciones</div>
+              <div id="dash-txn-list"></div>
+            </div>
+          </div>
+          <!-- Recomendaciones automáticas -->
+          <div class="card" id="dash-recs-card" style="display:none">
+            <div class="sec-title">Recomendaciones del mes</div>
+            <div id="dash-recs-list"></div>
+          </div>
         </div>
-      </div>
 
-      <!-- ══════════════ GASTOS ══════════════ -->
-      <div id="page-gastos" class="page">
-        <div class="alert-banner">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L1 14h14L8 1zm0 3l5.3 9H2.7L8 4zm-1 3v3h2V7H7zm0 4v2h2v-2H7z"/></svg>
-          <div class="alert-text"><strong>Entretenimiento al 90% del límite:</strong> Llevas $90 de $100. Cuida este gasto.</div>
-        </div>
-        <div class="stats-row" style="margin-bottom:13px">
-          <div class="stat-card">
-            <div class="stat-label">Total gastos</div>
-            <div class="stat-value text-ink">$1,450</div>
-            <div class="stat-sub">+$70 vs mes anterior</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Mayor categoría</div>
-            <div class="stat-value" style="font-size:15px">🏠 Vivienda</div>
-            <div class="stat-sub">$600 · 41.4%</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">En riesgo</div>
-            <div class="stat-value text-amber">1 categ.</div>
-            <div class="stat-sub">Entretenimiento al 90%</div>
-          </div>
-        </div>
-        <div class="section-title">Por categoría</div>
-        <div class="cat-grid">
-          <div class="cat-item">
-            <div class="cat-header"><span class="cat-icon">🏠</span><span class="cat-name">Vivienda</span><span class="cat-pct">41%</span></div>
-            <div class="progress-track"><div class="progress-fill" style="width:100%;background:rgba(30,107,85,0.25)"></div></div>
-            <div class="cat-amounts"><span>Sin límite</span><strong>$600.00</strong></div>
-          </div>
-          <div class="cat-item">
-            <div class="cat-header"><span class="cat-icon">🛒</span><span class="cat-name">Alimentación</span><span class="cat-pct">24%</span></div>
-            <div class="progress-track"><div class="progress-fill" style="width:100%;background:var(--red)"></div></div>
-            <div class="cat-amounts"><span style="color:var(--red)">+$50 del límite</span><strong>$350.00</strong></div>
-          </div>
-          <div class="cat-item">
-            <div class="cat-header"><span class="cat-icon">🚌</span><span class="cat-name">Transporte</span><span class="cat-pct">11%</span></div>
-            <div class="progress-track"><div class="progress-fill fill-green" style="width:64%"></div></div>
-            <div class="cat-amounts"><span>$160 de $250</span><strong>$160.00</strong></div>
-          </div>
-          <div class="cat-item">
-            <div class="cat-header"><span class="cat-icon">🎬</span><span class="cat-name">Entretenimiento</span><span class="cat-pct">6%</span></div>
-            <div class="progress-track"><div class="progress-fill fill-amber" style="width:90%"></div></div>
-            <div class="cat-amounts"><span style="color:var(--amber)">⚠ $90 de $100</span><strong>$90.00</strong></div>
-          </div>
-          <div class="cat-item">
-            <div class="cat-header"><span class="cat-icon">💊</span><span class="cat-name">Salud</span><span class="cat-pct">4%</span></div>
-            <div class="progress-track"><div class="progress-fill fill-green" style="width:37%"></div></div>
-            <div class="cat-amounts"><span>$55 de $150</span><strong>$55.00</strong></div>
-          </div>
-          <div class="cat-item">
-            <div class="cat-header"><span class="cat-icon">📦</span><span class="cat-name">Otros</span><span class="cat-pct">13%</span></div>
-            <div class="progress-track"><div class="progress-fill" style="width:50%;background:var(--ink4)"></div></div>
-            <div class="cat-amounts"><span>Sin límite</span><strong>$195.00</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══════════════ METAS ══════════════ -->
-      <div id="page-metas" class="page">
-        <div class="goal-detail-card">
-          <div class="goal-big-header">
-            <div class="goal-big-emoji">✈️</div>
-            <div class="goal-big-info">
-              <div class="goal-big-name">Viaje a Colombia</div>
-              <div class="goal-big-sub">Meta: $2,500 · Nov 2025 · <span style="color:var(--g);font-weight:500">Viable ✓</span></div>
-            </div>
-            <div class="meta-badge badge-green" style="font-size:10.5px;padding:4px 10px">$250/mes</div>
-          </div>
-          <div class="goal-progress-row">
-            <div class="goal-pct">18%</div>
-            <div class="goal-progress-info">
-              <div class="goal-progress-track"><div class="goal-progress-fill" style="width:18%"></div></div>
-              <div style="font-size:10.5px;color:var(--ink3)">$450 ahorrados de $2,500 · 8 meses restantes</div>
-            </div>
-          </div>
-          <div class="section-title" style="margin-bottom:7px;font-size:12px">Simulador de escenarios</div>
-          <div class="scenario-grid">
-            <div class="scenario-card selected" onclick="selectScenario(this)">
-              <div class="scenario-label">Plazo original</div>
-              <div class="scenario-amount">$250</div>
-              <div class="scenario-date">Nov 2025</div>
-              <div class="scenario-tag">Actual</div>
-            </div>
-            <div class="scenario-card" onclick="selectScenario(this)">
-              <div class="scenario-label">Aporte +20%</div>
-              <div class="scenario-amount">$300</div>
-              <div class="scenario-date">Sep 2025</div>
-              <div class="scenario-tag">-1.5 meses</div>
-            </div>
-            <div class="scenario-card" onclick="selectScenario(this)">
-              <div class="scenario-label">Extender 3 meses</div>
-              <div class="scenario-amount">$200</div>
-              <div class="scenario-date">Feb 2026</div>
-              <div class="scenario-tag">-$50/mes</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:7px;margin-top:13px">
-            <button class="btn btn-primary" style="flex:1" onclick="showToast('Aporte de $250 registrado ✓')">Registrar aporte</button>
-            <button class="btn btn-ghost" onclick="showToast('Formulario de edición abierto')">Editar meta</button>
-          </div>
-        </div>
-        <div class="goal-detail-card">
-          <div class="goal-big-header">
-            <div class="goal-big-emoji">🏠</div>
-            <div class="goal-big-info">
-              <div class="goal-big-name">Fondo de emergencia</div>
-              <div class="goal-big-sub">Meta: $6,000 · Dic 2025 · <span style="color:var(--amber);font-weight:500">Ajustado ⚠</span></div>
-            </div>
-            <div class="meta-badge badge-amber" style="font-size:10.5px;padding:4px 10px">$305/mes</div>
-          </div>
-          <div class="goal-progress-row">
-            <div class="goal-pct" style="color:var(--amber)">42%</div>
-            <div class="goal-progress-info">
-              <div class="goal-progress-track"><div class="goal-progress-fill" style="width:42%;background:var(--amber)"></div></div>
-              <div style="font-size:10.5px;color:var(--ink3)">$2,520 ahorrados de $6,000 · 12 meses restantes</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:7px;margin-top:10px">
-            <button class="btn btn-primary" style="flex:1" onclick="showToast('Aporte de $305 registrado ✓')">Registrar aporte</button>
-            <button class="btn btn-ghost" onclick="showToast('Formulario de edición abierto')">Editar meta</button>
-          </div>
-        </div>
-        <div class="card" style="text-align:center;padding:18px;border-style:dashed;cursor:pointer" onclick="showToast('Formulario de nueva meta abierto')">
-          <div style="font-size:26px;margin-bottom:7px">🎯</div>
-          <div style="font-size:13.5px;font-weight:500;color:var(--g)">Crear nueva meta</div>
-          <div style="font-size:11.5px;color:var(--ink3);margin-top:3px">Agrega una meta y calcula cuánto necesitas apartar cada mes</div>
-        </div>
-      </div>
-
-      <!-- ══════════════ PAREJA ══════════════ -->
-      <div id="page-pareja" class="page">
-        <div class="couple-header">
-          <div class="couple-avatars">
-            <div class="avatar">AG</div>
-            <div class="avatar">CM</div>
-          </div>
-          <div class="couple-info">
-            <h3>Ana &amp; Carlos</h3>
-            <p>Proyecto Casa 2025 · Activo desde Nov 2024</p>
-          </div>
-          <div class="couple-rule">Proporcional 61% / 39%</div>
-        </div>
-        <div class="owed-banner">
-          <svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px;color:#7A5200;flex-shrink:0"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zM7 9h2v2H7V9zm0-4h2v3H7V5z"/></svg>
-          <div class="owed-text">Carlos pagó de más este mes. <strong>Ana le debe $183.50</strong> según la regla proporcional.</div>
-          <button class="settle-btn" onclick="showToast('Deuda marcada como saldada ✓')">Marcar saldado</button>
-        </div>
-        <div class="balance-split">
-          <div class="person-card">
-            <div class="person-card-header">
-              <div class="avatar" style="width:29px;height:29px;font-size:10px">AG</div>
-              <div class="person-card-name">Ana</div>
-            </div>
-            <div class="person-paid text-ink">$400.00</div>
-            <div class="person-expected">Esperado: $583.50 (39%)</div>
-            <div class="person-diff badge-red" style="color:#8B2019">Pagó $183.50 de menos</div>
-          </div>
-          <div class="person-card">
-            <div class="person-card-header">
-              <div class="avatar" style="width:29px;height:29px;font-size:10px;background:#6C3483">CM</div>
-              <div class="person-card-name">Carlos</div>
-            </div>
-            <div class="person-paid text-ink">$1,100.00</div>
-            <div class="person-expected">Esperado: $916.50 (61%)</div>
-            <div class="person-diff badge-green" style="color:var(--g2)">Pagó $183.50 de más</div>
-          </div>
-        </div>
-        <div class="card" style="margin-bottom:11px">
-          <div class="section-title">Gastos compartidos · Enero 2025</div>
-          <div class="txn-item">
-            <div class="txn-icon">🏠</div>
-            <div class="txn-info"><div class="txn-name">Alquiler enero</div><div class="txn-cat">Pagó: Carlos · 61%/39%</div></div>
-            <div style="text-align:right"><div class="txn-amount text-ink">$900.00</div><div style="font-size:10px;color:var(--ink3)">Ana: $351 · Carlos: $549</div></div>
-          </div>
-          <div class="txn-item">
-            <div class="txn-icon">💡</div>
-            <div class="txn-info"><div class="txn-name">Servicios (luz, agua, internet)</div><div class="txn-cat">Pagó: Ana · 61%/39%</div></div>
-            <div style="text-align:right"><div class="txn-amount text-ink">$200.00</div><div style="font-size:10px;color:var(--ink3)">Ana: $78 · Carlos: $122</div></div>
-          </div>
-          <div class="txn-item">
-            <div class="txn-icon">🛒</div>
-            <div class="txn-info"><div class="txn-name">Supermercado</div><div class="txn-cat">Pagó: Carlos · 61%/39%</div></div>
-            <div style="text-align:right"><div class="txn-amount text-ink">$400.00</div><div style="font-size:10px;color:var(--ink3)">Ana: $156 · Carlos: $244</div></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="section-title">Meta conjunta</div>
-          <div class="meta-card">
-            <div class="meta-header">
-              <div class="meta-emoji">🏠</div>
-              <div class="meta-name">Fondo de emergencia familiar</div>
-              <div class="meta-badge badge-amber">Ajustado</div>
-            </div>
-            <div class="progress-track"><div class="progress-fill fill-amber" style="width:42%"></div></div>
-            <div class="meta-footer"><span>Ana: $195/mes · Carlos: $305/mes</span><span>$2,520 / $6,000</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══════════════ PERFIL ══════════════ -->
-      <div id="page-perfil" class="page">
-        <div class="card" style="margin-bottom:11px">
-          <div style="display:flex;align-items:center;gap:13px;margin-bottom:15px">
-            <div class="avatar" style="width:50px;height:50px;font-size:17px">AG</div>
+        <!-- ── INGRESOS PAGE ── -->
+        <div id="page-ingresos" class="page">
+          <div class="income-hero">
             <div>
-              <div style="font-size:16px;font-weight:600">Ana García</div>
-              <div style="font-size:12px;color:var(--g);font-weight:500;margin-top:2px">Plan Premium · Activo</div>
+              <p>TOTAL INGRESOS DEL MES</p>
+              <h3 id="inc-total">$0</h3>
+            </div>
+            <div style="text-align:right">
+              <p>Fuentes activas</p>
+              <span class="sub" id="inc-count">0 fuentes</span>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
-            <div><div class="form-label">País</div><div style="font-size:13.5px">🇵🇦 Panamá</div></div>
-            <div><div class="form-label">Moneda</div><div style="font-size:13.5px">USD ($)</div></div>
-            <div><div class="form-label">Tipo ingreso</div><div style="font-size:13.5px">Mixto</div></div>
-            <div><div class="form-label">Miembro desde</div><div style="font-size:13.5px">Nov 2024</div></div>
+          <div class="sec-title" style="margin-bottom:9px">Mis fuentes de ingreso</div>
+          <div id="inc-sources-list"></div>
+          <button class="add-trigger" onclick="showAddIncomeApp()">
+            <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Agregar fuente de ingreso
+          </button>
+          <div class="add-line-form" id="add-income-app-form">
+            <div class="form-group">
+              <label class="form-label">Nombre del ingreso</label>
+              <input class="form-input" id="ai-name" type="text" placeholder="ej: Salario, Freelance, Renta...">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Monto mensual</label>
+                <input class="form-input" id="ai-amount" type="number" placeholder="0.00" min="0" step="0.01">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tipo</label>
+                <select class="form-select" id="ai-type">
+                  <option value="fixed">Fijo</option>
+                  <option value="variable">Variable</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn btn-primary" style="flex:1;padding:9px" onclick="addIncomeApp()">Agregar</button>
+              <button class="btn btn-ghost btn-sm" onclick="hideAddIncomeApp()">Cancelar</button>
+            </div>
           </div>
         </div>
-        <div class="card" style="margin-bottom:11px">
-          <div class="section-title" style="margin-bottom:11px">Límites de categorías</div>
-          <div class="txn-item"><div class="txn-info"><div class="txn-name">🛒 Alimentación</div></div><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;color:var(--ink3)">$300/mes</span><button class="rec-btn" onclick="showToast('Límite actualizado')">Editar</button></div></div>
-          <div class="txn-item"><div class="txn-info"><div class="txn-name">🎬 Entretenimiento</div></div><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;color:var(--amber)">$100/mes ⚠</span><button class="rec-btn" onclick="showToast('Límite actualizado')">Editar</button></div></div>
-          <div class="txn-item" style="border:none"><div class="txn-info"><div class="txn-name">🚌 Transporte</div></div><div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;color:var(--ink3)">$250/mes</span><button class="rec-btn" onclick="showToast('Límite actualizado')">Editar</button></div></div>
-        </div>
-        <div class="card">
-          <div class="section-title" style="margin-bottom:11px">Notificaciones</div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <span style="font-size:13px">Alertas de límite de categoría</span>
-              <div onclick="showToast('Guardado')" style="width:34px;height:19px;border-radius:10px;background:var(--g);position:relative;cursor:pointer"><div style="position:absolute;right:2px;top:2px;width:15px;height:15px;border-radius:50%;background:#fff"></div></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <span style="font-size:13px">Recordatorios de metas</span>
-              <div onclick="showToast('Guardado')" style="width:34px;height:19px;border-radius:10px;background:var(--g);position:relative;cursor:pointer"><div style="position:absolute;right:2px;top:2px;width:15px;height:15px;border-radius:50%;background:#fff"></div></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <span style="font-size:13px">Resumen mensual por email</span>
-              <div onclick="showToast('Guardado')" style="width:34px;height:19px;border-radius:10px;background:var(--surface3);position:relative;cursor:pointer"><div style="position:absolute;left:2px;top:2px;width:15px;height:15px;border-radius:50%;background:#fff;border:0.5px solid var(--border2)"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-    </div><!-- /content -->
-  </div><!-- /main -->
-</div><!-- /app-frame -->
-</div><!-- /app-wrap -->
+        <!-- ── GASTOS PAGE ── -->
+        <div id="page-gastos" class="page">
+          <div id="gastos-alert-container"></div>
+          <div class="stats-row" style="margin-bottom:13px">
+            <div class="stat-card">
+              <div class="stat-lbl">Total gastos</div>
+              <div class="stat-val tc-ink" id="exp-total">$0</div>
+              <div class="stat-sub" id="exp-total-sub">Este mes</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-lbl">Mayor categoría</div>
+              <div class="stat-val" id="exp-top-cat" style="font-size:14px">—</div>
+              <div class="stat-sub" id="exp-top-sub">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-lbl">Num. transacciones</div>
+              <div class="stat-val tc-ink" id="exp-count">0</div>
+              <div class="stat-sub">Este mes</div>
+            </div>
+          </div>
+          <div class="sec-title">Por categoría</div>
+          <div class="cat-summary-grid" id="cat-grid-app"></div>
+          <div class="sec-title" style="margin-top:4px">Todas las transacciones</div>
+          <div class="card" id="all-txn-card">
+            <div id="all-txn-list"></div>
+          </div>
+          <div id="no-gastos" class="no-gastos" style="display:none">
+            <div style="font-size:32px;margin-bottom:8px">💸</div>
+            <div style="font-size:14px;font-weight:500;margin-bottom:4px">Sin gastos registrados</div>
+            <div style="font-size:12px;color:var(--ink4)">Usa el botón + para agregar tu primer gasto</div>
+          </div>
+        </div>
+
+        <!-- ── METAS PAGE ── -->
+        <div id="page-metas" class="page">
+          <div id="goals-list-app"></div>
+          <div class="card" style="text-align:center;padding:20px;border-style:dashed;cursor:pointer;margin-top:4px" onclick="openGoalModal()">
+            <div style="font-size:26px;margin-bottom:6px">🎯</div>
+            <div style="font-size:13.5px;font-weight:500;color:var(--g)">Crear nueva meta</div>
+            <div style="font-size:11.5px;color:var(--ink3);margin-top:3px">Agrega una meta y calcula cuánto necesitas apartar cada mes</div>
+          </div>
+        </div>
+
+        <!-- ── PAREJA PAGE ── -->
+        <div id="page-pareja" class="page">
+          <div id="pareja-content"></div>
+        </div>
+
+        <!-- ── PERFIL PAGE ── -->
+        <div id="page-perfil" class="page">
+          <div class="card profile-section">
+            <div style="display:flex;align-items:center;gap:13px;margin-bottom:18px">
+              <div class="avatar" id="perfil-avatar" style="width:50px;height:50px;font-size:18px">AG</div>
+              <div>
+                <div style="font-size:16px;font-weight:600" id="perfil-name">Ana García</div>
+                <div style="font-size:12px;color:var(--g);font-weight:500;margin-top:2px">Plan gratuito</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tu nombre</label>
+              <input class="form-input" id="prf-name" type="text">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">País</label>
+                <select class="form-select" id="prf-country"></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Moneda</label>
+                <select class="form-select" id="prf-currency">
+                  <option value="USD">$ USD</option>
+                  <option value="COP">$ COP</option>
+                  <option value="MXN">$ MXN</option>
+                  <option value="CRC">₡ CRC</option>
+                  <option value="PEN">S/ PEN</option>
+                  <option value="CLP">$ CLP</option>
+                  <option value="ARS">$ ARS</option>
+                  <option value="EUR">€ EUR</option>
+                  <option value="GTQ">Q GTQ</option>
+                </select>
+              </div>
+            </div>
+            <div id="prf-partner-section" style="display:none">
+              <div class="form-group">
+                <label class="form-label">Nombre de tu pareja</label>
+                <input class="form-input" id="prf-partner" type="text">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="saveProfile()" style="margin-top:4px">Guardar cambios</button>
+          </div>
+          <div class="card profile-section">
+            <div class="sec-title" style="margin-bottom:12px">Límites de presupuesto por categoría</div>
+            <div id="budget-limits-list"></div>
+            <button class="add-trigger" style="margin-top:8px" onclick="openBudgetLimitModal()">
+              <svg viewBox="0 0 16 16" fill="currentColor" style="width:14px;height:14px"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Agregar límite de categoría
+            </button>
+          </div>
+          <div class="card">
+            <div class="sec-title" style="margin-bottom:12px">Datos de mi cuenta</div>
+            <div style="font-size:13px;color:var(--ink3);margin-bottom:12px">
+              Todos tus datos se guardan en este dispositivo usando almacenamiento local. Nada se envía a servidores.
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="confirmReset()">Eliminar todos los datos</button>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </div><!-- /main -->
+  </div><!-- /app-layout -->
+</div><!-- /screen-app -->
 
 <!-- FAB -->
-<button class="fab" onclick="openModal()" title="Agregar gasto">+</button>
+<button class="fab" onclick="openGastoModal()" id="fab-btn" title="Agregar gasto" style="display:none">+</button>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="closeModalOnOverlay(event)">
+<!-- ── MODAL: Agregar Gasto ── -->
+<div class="modal-overlay" id="modal-gasto" onclick="closeModalOnOverlay(event,'modal-gasto')">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title">Agregar gasto rápido</div>
+    <div class="modal-title" id="modal-gasto-title">Agregar gasto</div>
     <div class="form-group">
       <label class="form-label">Monto</label>
-      <input class="form-input" type="number" placeholder="$0.00" id="gasto-monto" style="font-size:20px;font-weight:600;padding:11px">
+      <input class="form-input" type="number" id="mg-amount" placeholder="0.00" min="0" step="0.01" style="font-size:20px;font-weight:600;padding:11px">
     </div>
     <div class="form-group">
       <label class="form-label">Categoría</label>
-      <div class="cat-grid-mini">
-        <button class="cat-btn selected" onclick="selectCat(this)"><span>🛒</span>Aliment.</button>
-        <button class="cat-btn" onclick="selectCat(this)"><span>🚌</span>Transp.</button>
-        <button class="cat-btn" onclick="selectCat(this)"><span>🎬</span>Entret.</button>
-        <button class="cat-btn" onclick="selectCat(this)"><span>💊</span>Salud</button>
-        <button class="cat-btn" onclick="selectCat(this)"><span>👗</span>Ropa</button>
-        <button class="cat-btn" onclick="selectCat(this)"><span>📚</span>Educac.</button>
-        <button class="cat-btn" onclick="selectCat(this)"><span>⚡</span>Servic.</button>
-        <button class="cat-btn" onclick="selectCat(this)"><span>📦</span>Otros</button>
+      <div class="cat-grid-mini" id="mg-cats">
+        <button class="cat-btn sel" onclick="selCat(this)"><span>🛒</span>Aliment.</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>🏠</span>Vivienda</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>🚌</span>Transp.</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>🎬</span>Entret.</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>💊</span>Salud</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>👗</span>Ropa</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>📚</span>Educac.</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>💳</span>Deudas</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>⚡</span>Servic.</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>🍽️</span>Restaur.</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>💅</span>Personal</button>
+        <button class="cat-btn" onclick="selCat(this)"><span>📦</span>Otros</button>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group" style="margin-bottom:0">
         <label class="form-label">Descripción</label>
-        <input class="form-input" type="text" placeholder="ej: Mercado semanal">
+        <input class="form-input" id="mg-desc" type="text" placeholder="ej: Mercado semanal">
       </div>
       <div class="form-group" style="margin-bottom:0">
         <label class="form-label">Fecha</label>
-        <input class="form-input" type="date" id="fecha-gasto">
+        <input class="form-input" id="mg-date" type="date">
       </div>
     </div>
-    <div style="margin-top:11px;display:flex;align-items:center;gap:9px">
-      <input type="checkbox" id="shared-check" style="width:15px;height:15px;accent-color:var(--g)">
-      <label for="shared-check" style="font-size:12.5px;cursor:pointer">Gasto compartido con Carlos</label>
+    <div id="shared-toggle-row" style="display:none;margin-top:12px;align-items:center;gap:9px">
+      <input type="checkbox" id="mg-shared" style="width:15px;height:15px;accent-color:var(--g);cursor:pointer">
+      <label for="mg-shared" style="font-size:13px;cursor:pointer">Gasto compartido con <span id="mg-partner-name">mi pareja</span></label>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" style="flex:1" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-primary" style="flex:2" onclick="saveGasto()">Guardar gasto</button>
+      <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modal-gasto')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" id="mg-save-btn" onclick="saveGasto()">Guardar gasto</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Nueva Meta ── -->
+<div class="modal-overlay" id="modal-goal" onclick="closeModalOnOverlay(event,'modal-goal')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nueva meta de ahorro</div>
+    <div class="form-group">
+      <label class="form-label">Nombre de la meta</label>
+      <input class="form-input" id="ng-name" type="text" placeholder="ej: Vacaciones, Fondo de emergencia...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <div class="toggle-group" id="ng-emoji-group">
+        <button class="toggle-btn active" data-emoji="🎯" onclick="selectEmoji2(this)">🎯</button>
+        <button class="toggle-btn" data-emoji="✈️" onclick="selectEmoji2(this)">✈️</button>
+        <button class="toggle-btn" data-emoji="🏠" onclick="selectEmoji2(this)">🏠</button>
+        <button class="toggle-btn" data-emoji="🚗" onclick="selectEmoji2(this)">🚗</button>
+        <button class="toggle-btn" data-emoji="💍" onclick="selectEmoji2(this)">💍</button>
+        <button class="toggle-btn" data-emoji="💰" onclick="selectEmoji2(this)">💰</button>
+        <button class="toggle-btn" data-emoji="🎓" onclick="selectEmoji2(this)">🎓</button>
+        <button class="toggle-btn" data-emoji="📱" onclick="selectEmoji2(this)">📱</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Monto objetivo</label>
+        <input class="form-input" id="ng-amount" type="number" placeholder="0.00" min="0" step="0.01">
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Fecha objetivo</label>
+        <input class="form-input" id="ng-date" type="date">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modal-goal')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveGoal()">Crear meta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Aporte a Meta ── -->
+<div class="modal-overlay" id="modal-aporte" onclick="closeModalOnOverlay(event,'modal-aporte')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-aporte-title">Registrar aporte</div>
+    <input type="hidden" id="aporte-goal-id">
+    <div class="form-group">
+      <label class="form-label">Monto del aporte</label>
+      <input class="form-input" id="ap-amount" type="number" placeholder="0.00" min="0" step="0.01" style="font-size:20px;font-weight:600;padding:11px">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fecha</label>
+      <input class="form-input" id="ap-date" type="date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notas <span>(opcional)</span></label>
+      <input class="form-input" id="ap-notes" type="text" placeholder="ej: Ahorro de bonificación">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modal-aporte')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveAporte()">Registrar aporte</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL: Límite de presupuesto ── -->
+<div class="modal-overlay" id="modal-limit" onclick="closeModalOnOverlay(event,'modal-limit')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Límite de categoría</div>
+    <div class="form-group">
+      <label class="form-label">Categoría</label>
+      <select class="form-select" id="lm-cat">
+        <option>🛒 Alimentación</option>
+        <option>🏠 Vivienda</option>
+        <option>🚌 Transporte</option>
+        <option>🎬 Entretenimiento</option>
+        <option>💊 Salud</option>
+        <option>👗 Ropa</option>
+        <option>📚 Educación</option>
+        <option>💳 Deudas</option>
+        <option>⚡ Servicios</option>
+        <option>🍽️ Restaurantes</option>
+        <option>💅 Personal</option>
+        <option>📦 Otros</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Monto límite mensual</label>
+      <input class="form-input" id="lm-amount" type="number" placeholder="0.00" min="0" step="0.01">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeModal('modal-limit')">Cancelar</button>
+      <button class="btn btn-primary" style="flex:2" onclick="saveLimit()">Guardar límite</button>
     </div>
   </div>
 </div>
@@ -810,61 +1082,1024 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:#E8ECF2;color:
 <div class="toast" id="toast"></div>
 
 <script>
-const pages={
-  dashboard:{title:'Dashboard',sub:'Enero 2025\u00a0\u00b7\u00a0Hola, Ana \ud83d\udc4b'},
-  ingresos:{title:'Ingresos',sub:'Enero 2025\u00a0\u00b7\u00a0Total mensual actualizado'},
-  gastos:{title:'Gastos',sub:'Enero 2025\u00a0\u00b7\u00a01 alerta activa'},
-  metas:{title:'Metas',sub:'2 metas activas\u00a0\u00b7\u00a0Capacidad de ahorro: $280/mes'},
-  pareja:{title:'Modo Pareja',sub:'Ana & Carlos\u00a0\u00b7\u00a0Proporcional 61% / 39%'},
-  perfil:{title:'Perfil',sub:'Ana Garc\u00eda\u00a0\u00b7\u00a0Plan Premium'}
-};
+// ════════════════════════════════════════════
+// STATE — todo en localStorage
+// ════════════════════════════════════════════
+const LS = 'finwise_v1';
+let S = {};
 
-function navigate(id,el){
+function loadState(){
+  try{ S = JSON.parse(localStorage.getItem(LS)) || {}; } catch(e){ S={}; }
+  if(!S.incomeSources) S.incomeSources = [];
+  if(!S.expenses) S.expenses = [];
+  if(!S.goals) S.goals = [];
+  if(!S.goalContributions) S.goalContributions = [];
+  if(!S.budgetLimits) S.budgetLimits = [];
+  if(!S.settledMonths) S.settledMonths = [];
+  if(!S.profile) S.profile = {};
+}
+
+function saveState(){ localStorage.setItem(LS, JSON.stringify(S)); }
+
+// ── Formateo ──
+function fmt(n, cur){
+  const c = cur || S.profile.currency || 'USD';
+  const sym = {USD:'$',COP:'$',MXN:'$',CRC:'₡',PEN:'S/',CLP:'$',ARS:'$',EUR:'€',GTQ:'Q'}[c] || '$';
+  return sym + parseFloat(n||0).toLocaleString('es',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function initials(name){
+  if(!name) return '??';
+  const parts = name.trim().split(' ');
+  return (parts[0][0]+(parts[1]?parts[1][0]:'')).toUpperCase();
+}
+function todayStr(){
+  return new Date().toISOString().split('T')[0];
+}
+function monthLabel(){
+  const now = new Date();
+  return now.toLocaleDateString('es',{month:'long',year:'numeric'});
+}
+function monthKey(){
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+}
+
+// ════════════════════════════════════════════
+// ONBOARDING
+// ════════════════════════════════════════════
+let onbStep = 1;
+const totalSteps = 4;
+let incomeTypeVal = 'fixed';
+let coupleEnabled = false;
+let ruleVal = 'equal';
+let selectedEmoji = '🎯';
+let onbIncomes = [];
+let onbExpenses = [];
+
+function renderDots(){
+  const c = document.getElementById('onb-dots');
+  c.innerHTML = '';
+  for(let i=1;i<=totalSteps;i++){
+    const d = document.createElement('div');
+    d.className = 'onb-step-dot' + (i<onbStep?' done':i===onbStep?' active':'');
+    c.appendChild(d);
+  }
+}
+
+const stepTitles = [
+  'Cuéntanos sobre ti',
+  'Tus ingresos mensuales',
+  'Tus gastos fijos',
+  'Tu primera meta (opcional)'
+];
+const stepSubs = [
+  'Paso 1 de 4 — Perfil personal',
+  'Paso 2 de 4 — Fuentes de ingreso',
+  'Paso 3 de 4 — Gastos del mes',
+  'Paso 4 de 4 — Meta de ahorro'
+];
+
+function renderStep(){
+  for(let i=1;i<=totalSteps;i++){
+    document.getElementById('step-'+i).classList.toggle('active', i===onbStep);
+  }
+  document.getElementById('onb-title').textContent = stepTitles[onbStep-1];
+  document.getElementById('onb-sub').textContent = stepSubs[onbStep-1];
+  document.getElementById('btn-back').style.display = onbStep>1?'inline-flex':'none';
+  document.getElementById('btn-next').textContent = onbStep===totalSteps ? 'Comenzar →' : 'Continuar →';
+  renderDots();
+  if(onbStep===3) renderBalancePreview();
+}
+
+function toggleCouple(){
+  coupleEnabled = !coupleEnabled;
+  document.getElementById('couple-switch').classList.toggle('on', coupleEnabled);
+  document.getElementById('couple-name-section').style.display = coupleEnabled?'block':'none';
+}
+
+// Toggle groups (income type, rule)
+document.getElementById('income-type-toggle').addEventListener('click', e=>{
+  const btn = e.target.closest('[data-val]');
+  if(!btn) return;
+  document.querySelectorAll('#income-type-toggle .toggle-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  incomeTypeVal = btn.dataset.val;
+});
+document.getElementById('rule-toggle').addEventListener('click', e=>{
+  const btn = e.target.closest('[data-val]');
+  if(!btn) return;
+  document.querySelectorAll('#rule-toggle .toggle-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ruleVal = btn.dataset.val;
+  document.getElementById('custom-pct-section').style.display = ruleVal==='custom'?'block':'none';
+});
+
+function syncPct(){
+  const a = Math.max(1, Math.min(99, parseInt(document.getElementById('inp-pct-a').value)||50));
+  document.getElementById('inp-pct-b').value = 100-a;
+  document.getElementById('my-pct-label').textContent = `(${a}%)`;
+  document.getElementById('partner-pct-label').textContent = `(${100-a}%)`;
+}
+
+// Onboarding incomes
+function renderOnbIncomes(){
+  const c = document.getElementById('income-list');
+  c.innerHTML = '';
+  onbIncomes.forEach((inc, i)=>{
+    c.innerHTML += `<div class="income-line">
+      <div class="income-line-info">
+        <div class="income-line-name">${inc.name}</div>
+        <div class="income-line-sub">${inc.type==='fixed'?'Fijo':'Variable'} · ${fmt(inc.amount)}/mes</div>
+      </div>
+      <div class="income-line-amount">${fmt(inc.amount)}</div>
+      <button class="line-del" onclick="removeOnbIncome(${i})">×</button>
+    </div>`;
+  });
+}
+function removeOnbIncome(i){ onbIncomes.splice(i,1); renderOnbIncomes(); }
+function showAddIncome(){ document.getElementById('add-income-form').classList.add('visible'); document.getElementById('new-inc-name').focus(); }
+function hideAddIncome(){ document.getElementById('add-income-form').classList.remove('visible'); }
+function addIncome(){
+  const name = document.getElementById('new-inc-name').value.trim();
+  const amount = parseFloat(document.getElementById('new-inc-amount').value)||0;
+  const type = document.getElementById('new-inc-type').value;
+  if(!name||amount<=0){ showToast('Completa nombre y monto'); return; }
+  onbIncomes.push({name, amount, type});
+  document.getElementById('new-inc-name').value='';
+  document.getElementById('new-inc-amount').value='';
+  renderOnbIncomes();
+  hideAddIncome();
+}
+
+// Onboarding expenses
+function renderOnbExpenses(){
+  const c = document.getElementById('expense-list-onb');
+  c.innerHTML = '';
+  onbExpenses.forEach((e, i)=>{
+    c.innerHTML += `<div class="expense-line">
+      <div class="expense-line-info">
+        <div class="expense-line-name">${e.cat} ${e.name}</div>
+        <div class="expense-line-sub">Gasto fijo mensual</div>
+      </div>
+      <div class="expense-line-amount">${fmt(e.amount)}</div>
+      <button class="line-del" onclick="removeOnbExpense(${i})">×</button>
+    </div>`;
+  });
+  renderBalancePreview();
+}
+function removeOnbExpense(i){ onbExpenses.splice(i,1); renderOnbExpenses(); }
+function showAddExpenseOnb(){ document.getElementById('add-expense-onb-form').classList.add('visible'); document.getElementById('new-exp-name-onb').focus(); }
+function hideAddExpenseOnb(){ document.getElementById('add-expense-onb-form').classList.remove('visible'); }
+function addExpenseOnb(){
+  const name = document.getElementById('new-exp-name-onb').value.trim();
+  const amount = parseFloat(document.getElementById('new-exp-amount-onb').value)||0;
+  const cat = document.getElementById('new-exp-cat-onb').value;
+  if(!name||amount<=0){ showToast('Completa descripción y monto'); return; }
+  onbExpenses.push({name, amount, cat});
+  document.getElementById('new-exp-name-onb').value='';
+  document.getElementById('new-exp-amount-onb').value='';
+  renderOnbExpenses();
+  hideAddExpenseOnb();
+}
+function renderBalancePreview(){
+  const totalInc = onbIncomes.reduce((a,b)=>a+b.amount,0);
+  const totalExp = onbExpenses.reduce((a,b)=>a+b.amount,0);
+  const bal = totalInc - totalExp;
+  const box = document.getElementById('balance-preview');
+  if(totalInc===0&&totalExp===0){ box.style.display='none'; return; }
+  box.style.display='block';
+  const el = document.getElementById('balance-preview-amount');
+  el.textContent = fmt(bal);
+  el.style.color = bal>=0?'var(--g)':'var(--red)';
+  document.getElementById('balance-preview-sub').textContent =
+    `Ingresos: ${fmt(totalInc)} — Gastos fijos: ${fmt(totalExp)}`;
+}
+
+// Step 4 goal
+document.getElementById('inp-goal-name').addEventListener('input', function(){
+  document.getElementById('goal-detail-section').style.display = this.value.trim()?'block':'none';
+  calcGoalPreview();
+});
+function selectEmoji(btn){
+  document.querySelectorAll('#step-4 [data-emoji]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedEmoji = btn.dataset.emoji;
+}
+function calcGoalPreview(){
+  const name = document.getElementById('inp-goal-name').value.trim();
+  const amount = parseFloat(document.getElementById('inp-goal-amount').value)||0;
+  const date = document.getElementById('inp-goal-date').value;
+  const box = document.getElementById('goal-preview');
+  if(!name||!amount||!date){ box.style.display='none'; return; }
+  const months = monthsBetween(new Date(), new Date(date));
+  if(months<=0){ box.style.display='none'; return; }
+  const monthly = amount/months;
+  const totalInc = onbIncomes.reduce((a,b)=>a+b.amount,0);
+  const totalExp = onbExpenses.reduce((a,b)=>a+b.amount,0);
+  const bal = totalInc - totalExp;
+  const viable = monthly <= bal*0.80;
+  box.style.display='block';
+  document.getElementById('goal-preview-content').innerHTML =
+    `Meta: <strong>${fmt(amount)}</strong> en <strong>${months} meses</strong><br>
+     Aporte mensual requerido: <strong style="color:var(--g)">${fmt(monthly)}</strong><br>
+     Viabilidad: <strong style="color:${viable?'var(--g)':'var(--red)'}">${viable?'✓ Viable con tu balance actual':'⚠ Ajustado — considera reducir gastos'}</strong>`;
+}
+function monthsBetween(a, b){
+  return Math.max(0, (b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth()));
+}
+
+function onbBack(){ if(onbStep>1){ onbStep--; renderStep(); } }
+function onbNext(){
+  if(onbStep===1){
+    const name = document.getElementById('inp-name').value.trim();
+    if(!name){
+      document.getElementById('inp-name').classList.add('error');
+      document.getElementById('err-name').style.display='block';
+      return;
+    }
+    document.getElementById('inp-name').classList.remove('error');
+    document.getElementById('err-name').style.display='none';
+  }
+  if(onbStep===2 && onbIncomes.length===0){
+    showToast('Agrega al menos un ingreso para continuar');
+    return;
+  }
+  if(onbStep===totalSteps){
+    finishOnboarding(); return;
+  }
+  onbStep++;
+  renderStep();
+}
+
+function finishOnboarding(){
+  // Build profile
+  const name = document.getElementById('inp-name').value.trim();
+  const country = document.getElementById('inp-country').value;
+  const currency = document.getElementById('inp-currency').value;
+  const partnerName = document.getElementById('inp-partner').value.trim();
+  let pctA = 50, pctB = 50;
+  if(ruleVal==='custom'){
+    pctA = parseInt(document.getElementById('inp-pct-a').value)||50;
+    pctB = 100-pctA;
+  }
+
+  S.profile = { name, country, currency, incomeType:incomeTypeVal,
+                coupleEnabled, partnerName: coupleEnabled?partnerName:'',
+                distributionRule: coupleEnabled?ruleVal:'equal',
+                pctA: coupleEnabled?pctA:50, pctB: coupleEnabled?pctB:50,
+                onboardingDone:true };
+
+  // Save incomes
+  const mk = monthKey();
+  onbIncomes.forEach(inc=>{
+    S.incomeSources.push({
+      id:'inc_'+Date.now()+Math.random(),
+      name:inc.name, amount:inc.amount, type:inc.type,
+      frequency:'monthly', active:true, createdAt:todayStr()
+    });
+  });
+
+  // Save fixed expenses
+  onbExpenses.forEach(exp=>{
+    S.expenses.push({
+      id:'exp_'+Date.now()+Math.random(),
+      description: exp.cat + ' ' + exp.name,
+      amount:exp.amount, category:exp.cat,
+      date:todayStr().substring(0,7)+'-01',
+      isShared:false, paidByMe:true, createdAt:todayStr()
+    });
+  });
+
+  // Save goal if any
+  const goalName = document.getElementById('inp-goal-name').value.trim();
+  const goalAmount = parseFloat(document.getElementById('inp-goal-amount').value)||0;
+  const goalDate = document.getElementById('inp-goal-date').value;
+  if(goalName && goalAmount>0 && goalDate){
+    S.goals.push({
+      id:'goal_'+Date.now(),
+      name:goalName, emoji:selectedEmoji,
+      targetAmount:goalAmount, savedAmount:0,
+      targetDate:goalDate, startDate:todayStr(),
+      status:'active', isCouple:false, createdAt:todayStr()
+    });
+  }
+
+  saveState();
+  initApp();
+}
+
+// ════════════════════════════════════════════
+// APP
+// ════════════════════════════════════════════
+function initApp(){
+  document.getElementById('screen-onboarding').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  document.getElementById('fab-btn').style.display='flex';
+  updateSidebar();
+  renderDashboard();
+  // Set up profile form
+  populateProfileForm();
+  // Set today on date inputs
+  document.getElementById('mg-date').value = todayStr();
+  document.getElementById('ap-date').value = todayStr();
+  document.getElementById('topbar-month').textContent = monthLabel();
+  // Show couple nav if enabled
+  if(S.profile.coupleEnabled){
+    document.getElementById('nav-couple-section').style.display='block';
+    document.getElementById('nav-pareja').style.display='flex';
+    document.getElementById('nav-pareja-label').textContent = S.profile.partnerName ? S.profile.name+' & '+S.profile.partnerName : 'Pareja';
+    document.getElementById('shared-toggle-row').style.display='flex';
+    document.getElementById('mg-partner-name').textContent = S.profile.partnerName || 'tu pareja';
+  }
+}
+
+function updateSidebar(){
+  const me = S.profile.name||'Usuario';
+  document.getElementById('sb-avatar-me').textContent = initials(me);
+  document.getElementById('sb-name-me').textContent = me;
+  document.getElementById('page-title');
+}
+
+// ── NAVIGATION ──
+const pageData = {
+  dashboard:{title:'Dashboard', sub:()=>'Tu resumen financiero · '+monthLabel()},
+  ingresos:{title:'Ingresos', sub:()=>'Gestiona tus fuentes de ingreso'},
+  gastos:{title:'Gastos', sub:()=>monthLabel()},
+  metas:{title:'Metas de ahorro', sub:()=>'Tus objetivos financieros'},
+  pareja:{title:'Modo Pareja', sub:()=>{
+    const a=S.profile.name||'Tú', b=S.profile.partnerName||'Pareja';
+    return a+' & '+b+' · '+dist_labels[S.profile.distributionRule||'equal'];
+  }},
+  perfil:{title:'Perfil & Configuración', sub:()=>'Gestiona tu cuenta'}
+};
+const dist_labels = {equal:'50/50',proportional:'Proporcional',custom:'Personalizado'};
+
+function navigate(pageId, navEl){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  const pg=document.getElementById('page-'+id);
-  if(pg)pg.classList.add('active');
-  if(el)el.classList.add('active');
-  const info=pages[id]||{title:id,sub:''};
-  document.getElementById('page-title').textContent=info.title;
-  document.getElementById('page-sub').textContent=info.sub;
+  const pg = document.getElementById('page-'+pageId);
+  if(pg) pg.classList.add('active');
+  if(navEl) navEl.classList.add('active');
+  const info = pageData[pageId]||{title:pageId,sub:()=>''};
+  document.getElementById('page-title').textContent = info.title;
+  document.getElementById('page-sub').textContent = info.sub();
+  // render on navigate
+  if(pageId==='dashboard') renderDashboard();
+  if(pageId==='ingresos') renderIngresos();
+  if(pageId==='gastos') renderGastos();
+  if(pageId==='metas') renderMetas();
+  if(pageId==='pareja') renderPareja();
+  if(pageId==='perfil') renderPerfil();
 }
 
-function openModal(){
-  document.getElementById('modal').classList.add('open');
-  const d=new Date();
-  document.getElementById('fecha-gasto').value=d.toISOString().split('T')[0];
-  setTimeout(()=>document.getElementById('gasto-monto').focus(),120);
+// ── CALCULATIONS ──
+function calcIncome(){
+  return S.incomeSources.filter(s=>s.active).reduce((a,s)=>a+s.amount,0);
+}
+function calcExpenses(){
+  const mk = monthKey();
+  return S.expenses.filter(e=>e.date && e.date.startsWith(mk)).reduce((a,e)=>a+e.amount,0);
+}
+function calcBalance(){
+  return calcIncome() - calcExpenses();
+}
+function healthStatus(bal, inc){
+  if(inc===0) return {dot:'#AEAEB2',text:'Sin ingresos configurados',color:'rgba(255,255,255,0.5)'};
+  const pct = bal/inc;
+  if(pct>0.20) return {dot:'#5DCAA5',text:'Salud financiera: Buena',color:'#5DCAA5'};
+  if(pct>0.05) return {dot:'#F0A500',text:'Salud financiera: Precaución',color:'#F0A500'};
+  return {dot:'#E74C3C',text:'Salud financiera: En riesgo',color:'#E74C3C'};
 }
 
-function closeModal(){document.getElementById('modal').classList.remove('open')}
+// ── DASHBOARD ──
+function renderDashboard(){
+  const inc = calcIncome();
+  const exp = calcExpenses();
+  const bal = inc - exp;
+  const h = healthStatus(bal, inc);
+  document.getElementById('dash-balance').textContent = fmt(bal);
+  document.getElementById('dash-balance').style.color = bal>=0?'#fff':'#FFB3B3';
+  document.getElementById('dash-health-dot').style.background = h.dot;
+  document.getElementById('dash-health-text').textContent = h.text;
+  document.getElementById('dash-income').textContent = fmt(inc);
+  document.getElementById('dash-expense').textContent = fmt(exp);
+  const saving = bal>0?bal*0.80:0;
+  document.getElementById('dash-saving').textContent = fmt(saving);
+  document.getElementById('dash-expense-sub').textContent = inc>0?(Math.round(exp/inc*100)+'% del ingreso'):'Este mes';
 
-function closeModalOnOverlay(e){if(e.target===document.getElementById('modal'))closeModal()}
+  // Goals mini
+  const gc = document.getElementById('dash-goals-list');
+  const active = S.goals.filter(g=>g.status==='active');
+  if(active.length===0){
+    gc.innerHTML = '<div class="meta-empty">Sin metas activas — <a style="color:var(--g);cursor:pointer" onclick="navigate(\'metas\',null)">crear una →</a></div>';
+  } else {
+    gc.innerHTML = '';
+    active.slice(0,2).forEach(g=>{
+      const pct = Math.min(100, Math.round(g.savedAmount/g.targetAmount*100));
+      const months = monthsBetween(new Date(), new Date(g.targetDate));
+      const needed = months>0?(g.targetAmount-g.savedAmount)/months:0;
+      const via = needed<=saving?'green':needed<=bal?'amber':'red';
+      gc.innerHTML += `<div class="meta-mini">
+        <div class="meta-mini-header">
+          <span style="font-size:17px">${g.emoji}</span>
+          <span class="meta-mini-name">${g.name}</span>
+          <span class="mbadge mbadge-${via}">${via==='green'?'Viable':via==='amber'?'Ajustado':'En riesgo'}</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill pf-${via}" style="width:${pct}%"></div></div>
+        <div class="meta-footer"><span>${fmt(g.savedAmount)} de ${fmt(g.targetAmount)}</span><span>${months} meses</span></div>
+      </div>`;
+    });
+  }
 
+  // Recent transactions
+  const tl = document.getElementById('dash-txn-list');
+  const recent = [...S.expenses].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  const catIcons = {'🛒 Alimentación':'🛒','🏠 Vivienda':'🏠','🚌 Transporte':'🚌','🎬 Entretenimiento':'🎬','💊 Salud':'💊','👗 Ropa':'👗','📚 Educación':'📚','💳 Deudas':'💳','⚡ Servicios':'⚡','🍽️ Restaurantes':'🍽️','💅 Personal':'💅','📦 Otros':'📦'};
+  function catIcon(c){ return Object.keys(catIcons).find(k=>c&&c.includes(k.split(' ')[1]))?catIcons[Object.keys(catIcons).find(k=>c&&c.includes(k.split(' ')[1]))]:'💸'; }
+  if(recent.length===0){
+    tl.innerHTML='<div class="txn-empty">Sin transacciones aún</div>';
+  } else {
+    tl.innerHTML = recent.map(e=>`<div class="txn-item">
+      <div class="txn-icon">${catIcon(e.category)}</div>
+      <div class="txn-info">
+        <div class="txn-name">${e.description}</div>
+        <div class="txn-cat">${e.category} · ${e.date}</div>
+      </div>
+      <div class="txn-amount tc-red">-${fmt(e.amount)}</div>
+    </div>`).join('');
+  }
+
+  // Recommendations
+  const recs = buildRecs(inc, exp, bal, saving, active);
+  const rc = document.getElementById('dash-recs-card');
+  const rl = document.getElementById('dash-recs-list');
+  if(recs.length>0){
+    rc.style.display='block';
+    rl.innerHTML = recs.map(r=>`<div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:7px;border:0.5px solid var(--border)">
+      <div style="width:30px;height:30px;border-radius:7px;background:${r.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <span style="font-size:14px">${r.icon}</span>
+      </div>
+      <div>
+        <div style="font-size:12.5px;font-weight:500;margin-bottom:2px">${r.title}</div>
+        <div style="font-size:11.5px;color:var(--ink3);line-height:1.4">${r.desc}</div>
+      </div>
+    </div>`).join('');
+  } else {
+    rc.style.display='none';
+  }
+}
+
+function buildRecs(inc, exp, bal, saving, goals){
+  const recs=[];
+  if(exp>inc && inc>0) recs.push({icon:'⚠️',bg:'var(--red-light)',title:'Tus gastos superan tus ingresos',desc:`Llevas ${fmt(exp)} en gastos vs ${fmt(inc)} de ingresos. Revisa tus categorías de gasto.`});
+  if(bal>0 && goals.length===0) recs.push({icon:'🎯',bg:'var(--g-light)',title:'Crea tu primera meta de ahorro',desc:`Tienes ${fmt(saving)} de capacidad de ahorro mensual. ¡Empiézala a trabajar!`});
+  if(bal>0 && saving>0 && goals.length>0){
+    goals.forEach(g=>{
+      const months = monthsBetween(new Date(), new Date(g.targetDate));
+      if(months>0){
+        const needed = (g.targetAmount-g.savedAmount)/months;
+        if(needed>saving*0.95) recs.push({icon:'⚡',bg:'var(--amber-light)',title:`Meta "${g.name}" en riesgo`,desc:`Necesitas ${fmt(needed)}/mes pero tu capacidad es ${fmt(saving)}/mes. Considera extender el plazo.`});
+      }
+    });
+  }
+  // Check budget limits
+  S.budgetLimits.forEach(lm=>{
+    const spent = expByCategory(lm.category);
+    if(spent>=lm.amount*0.90) recs.push({icon:'🔔',bg:'var(--red-light)',title:`Límite de ${lm.category} casi alcanzado`,desc:`Llevas ${fmt(spent)} de ${fmt(lm.amount)} (${Math.round(spent/lm.amount*100)}%). Cuida este gasto.`});
+  });
+  return recs.slice(0,3);
+}
+
+function expByCategory(cat){
+  const mk = monthKey();
+  return S.expenses.filter(e=>e.date&&e.date.startsWith(mk)&&e.category===cat).reduce((a,e)=>a+e.amount,0);
+}
+
+// ── INGRESOS ──
+function renderIngresos(){
+  const total = calcIncome();
+  document.getElementById('inc-total').textContent = fmt(total);
+  document.getElementById('inc-count').textContent = S.incomeSources.filter(s=>s.active).length + ' fuente(s)';
+  const list = document.getElementById('inc-sources-list');
+  if(S.incomeSources.filter(s=>s.active).length===0){
+    list.innerHTML='<div style="text-align:center;padding:24px 0;color:var(--ink4);font-size:13px">Sin fuentes de ingreso. Agrega la primera.</div>';
+    return;
+  }
+  list.innerHTML = S.incomeSources.filter(s=>s.active).map((s,i)=>`
+    <div class="income-source-card" style="background:var(--surface);border-radius:var(--radius);border:0.5px solid var(--border);padding:13px 15px;display:flex;align-items:center;gap:11px;margin-bottom:8px">
+      <div style="width:36px;height:36px;border-radius:9px;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">💼</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13.5px;font-weight:500">${s.name}</div>
+        <div style="font-size:10.5px;color:var(--ink3);margin-top:1px">${s.type==='fixed'?'Fijo':'Variable'} · Mensual</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:16px;font-weight:600;color:var(--g)">${fmt(s.amount)}</div>
+        <div style="font-size:10px;color:var(--ink3)">/mes</div>
+      </div>
+      <button class="line-del" onclick="deleteIncome('${s.id}')">×</button>
+    </div>
+  `).join('');
+}
+
+function showAddIncomeApp(){ document.getElementById('add-income-app-form').classList.add('visible'); document.getElementById('ai-name').focus(); }
+function hideAddIncomeApp(){ document.getElementById('add-income-app-form').classList.remove('visible'); }
+function addIncomeApp(){
+  const name = document.getElementById('ai-name').value.trim();
+  const amount = parseFloat(document.getElementById('ai-amount').value)||0;
+  const type = document.getElementById('ai-type').value;
+  if(!name||amount<=0){ showToast('Completa nombre y monto'); return; }
+  S.incomeSources.push({id:'inc_'+Date.now(),name,amount,type,frequency:'monthly',active:true,createdAt:todayStr()});
+  saveState();
+  document.getElementById('ai-name').value='';
+  document.getElementById('ai-amount').value='';
+  hideAddIncomeApp();
+  renderIngresos();
+  showToast('Fuente de ingreso agregada ✓');
+}
+function deleteIncome(id){
+  S.incomeSources = S.incomeSources.map(s=>s.id===id?{...s,active:false}:s);
+  saveState(); renderIngresos();
+}
+
+// ── GASTOS ──
+function renderGastos(){
+  const mk = monthKey();
+  const monthExp = S.expenses.filter(e=>e.date&&e.date.startsWith(mk));
+  const total = monthExp.reduce((a,e)=>a+e.amount,0);
+  document.getElementById('exp-total').textContent = fmt(total);
+  document.getElementById('exp-count').textContent = monthExp.length;
+
+  // Top category
+  const byCat = {};
+  monthExp.forEach(e=>{ byCat[e.category]=(byCat[e.category]||0)+e.amount; });
+  const topCat = Object.entries(byCat).sort((a,b)=>b[1]-a[1])[0];
+  if(topCat){
+    document.getElementById('exp-top-cat').textContent = topCat[0];
+    document.getElementById('exp-top-sub').textContent = fmt(topCat[1]) + ' · ' + (total?Math.round(topCat[1]/total*100)+'%':'0%');
+  } else {
+    document.getElementById('exp-top-cat').textContent = '—';
+    document.getElementById('exp-top-sub').textContent = '—';
+  }
+
+  // Alerts
+  const alertBox = document.getElementById('gastos-alert-container');
+  alertBox.innerHTML='';
+  const alertBadge = document.getElementById('nb-alerts');
+  let hasAlerts=false;
+  S.budgetLimits.forEach(lm=>{
+    const spent = (byCat[lm.category]||0);
+    const pct = spent/lm.amount;
+    if(pct>=0.90){
+      hasAlerts=true;
+      alertBox.innerHTML += `<div class="alert-banner">
+        <svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px;color:var(--red);flex-shrink:0"><path d="M8 1L1 14h14L8 1zm0 3l5.3 9H2.7L8 4zm-1 3v3h2V7H7zm0 4v2h2v-2H7z"/></svg>
+        <div class="alert-text"><strong>${lm.category} ${pct>=1?'excedido':'casi en límite'}:</strong> ${fmt(spent)} de ${fmt(lm.amount)} (${Math.round(pct*100)}%)</div>
+      </div>`;
+    }
+  });
+  alertBadge.style.display = hasAlerts?'inline':'none';
+
+  // Category grid
+  const grid = document.getElementById('cat-grid-app');
+  if(Object.keys(byCat).length===0){ grid.innerHTML=''; }
+  else {
+    grid.innerHTML = Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>{
+      const lm = S.budgetLimits.find(l=>l.category===cat);
+      const pct = lm?Math.min(110,Math.round(amt/lm.amount*100)):null;
+      const fillColor = pct>=100?'var(--red)':pct>=90?'var(--amber)':'var(--g)';
+      const catEmoji = cat.split(' ')[0]||'📦';
+      return `<div class="cat-card">
+        <div class="cat-card-header"><span class="cat-icon">${catEmoji}</span><span class="cat-name">${cat.substring(cat.indexOf(' ')+1)}</span><span class="cat-pct">${total?Math.round(amt/total*100)+'%':'0%'}</span></div>
+        ${lm?`<div class="prog-track"><div class="prog-fill" style="width:${Math.min(100,pct)}%;background:${fillColor}"></div></div>`:''}
+        <div class="cat-amounts"><span>${lm?`${fmt(amt)} de ${fmt(lm.amount)}`:'Sin límite'}</span><strong>${fmt(amt)}</strong></div>
+      </div>`;
+    }).join('');
+  }
+
+  // All transactions
+  const noExp = document.getElementById('no-gastos');
+  const allCard = document.getElementById('all-txn-card');
+  const allList = document.getElementById('all-txn-list');
+  if(monthExp.length===0){ noExp.style.display='block'; allCard.style.display='none'; }
+  else {
+    noExp.style.display='none'; allCard.style.display='block';
+    const sorted = [...monthExp].sort((a,b)=>b.date.localeCompare(a.date));
+    allList.innerHTML = sorted.map(e=>`
+      <div class="txn-item">
+        <div class="txn-icon">${e.category?e.category.split(' ')[0]:'💸'}</div>
+        <div class="txn-info">
+          <div class="txn-name">${e.description}</div>
+          <div class="txn-cat">${e.category} · ${e.date}${e.isShared?' · Compartido':''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="txn-amount tc-red">-${fmt(e.amount)}</div>
+          <button class="line-del" onclick="deleteExpense('${e.id}')">×</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function deleteExpense(id){
+  S.expenses = S.expenses.filter(e=>e.id!==id);
+  saveState(); renderGastos(); renderDashboard();
+  showToast('Gasto eliminado');
+}
+
+// ── MODAL GASTO ──
+let editGastoId = null;
+function openGastoModal(){
+  editGastoId = null;
+  document.getElementById('mg-amount').value='';
+  document.getElementById('mg-desc').value='';
+  document.getElementById('mg-date').value=todayStr();
+  document.getElementById('mg-shared').checked=false;
+  document.querySelectorAll('#mg-cats .cat-btn').forEach((b,i)=>b.classList.toggle('sel',i===0));
+  document.getElementById('modal-gasto').classList.add('open');
+  setTimeout(()=>document.getElementById('mg-amount').focus(),120);
+}
+function selCat(btn){
+  document.querySelectorAll('#mg-cats .cat-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
 function saveGasto(){
-  const m=parseFloat(document.getElementById('gasto-monto').value);
-  if(!m||m<=0){showToast('Ingresa un monto v\u00e1lido');return;}
-  closeModal();
-  document.getElementById('gasto-monto').value='';
-  showToast('Gasto de $'+m.toFixed(2)+' registrado \u2713');
+  const amount = parseFloat(document.getElementById('mg-amount').value)||0;
+  if(amount<=0){ showToast('Ingresa un monto válido'); return; }
+  const desc = document.getElementById('mg-desc').value.trim()||'Gasto';
+  const date = document.getElementById('mg-date').value||todayStr();
+  const selBtn = document.querySelector('#mg-cats .cat-btn.sel');
+  const category = selBtn ? selBtn.querySelector('span').textContent+' '+selBtn.textContent.replace(selBtn.querySelector('span').textContent,'').trim() : '📦 Otros';
+  const isShared = document.getElementById('mg-shared').checked;
+
+  S.expenses.push({
+    id:'exp_'+Date.now()+Math.random(),
+    description:desc, amount, category,
+    date, isShared, paidByMe:true, createdAt:todayStr()
+  });
+  saveState();
+  closeModal('modal-gasto');
+  showToast(`Gasto de ${fmt(amount)} registrado ✓`);
+  // re-render active page
+  const activePage = document.querySelector('.page.active');
+  if(activePage){
+    const pid = activePage.id.replace('page-','');
+    if(pid==='dashboard') renderDashboard();
+    if(pid==='gastos') renderGastos();
+  }
+  // Check budget alerts
+  const selCatName = category;
+  const lm = S.budgetLimits.find(l=>l.category===selCatName);
+  if(lm){
+    const mk = monthKey();
+    const spent = S.expenses.filter(e=>e.date&&e.date.startsWith(mk)&&e.category===selCatName).reduce((a,e)=>a+e.amount,0);
+    if(spent>=lm.amount) showToast('⚠ Límite de '+selCatName+' excedido', 4000);
+    else if(spent>=lm.amount*0.90) showToast('⚠ '+selCatName+' al 90% del límite', 3500);
+  }
 }
 
-function selectCat(btn){
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
+// ── METAS ──
+function renderMetas(){
+  const c = document.getElementById('goals-list-app');
+  const inc = calcIncome();
+  const exp = calcExpenses();
+  const bal = inc - exp;
+  const saving = bal>0?bal*0.80:0;
+  const active = S.goals.filter(g=>g.status==='active');
+  if(active.length===0){ c.innerHTML='<div style="text-align:center;padding:20px 0;color:var(--ink4);font-size:13px">Sin metas activas</div>'; return; }
+  c.innerHTML = active.map(g=>{
+    const pct = Math.min(100, Math.round(g.savedAmount/g.targetAmount*100));
+    const months = monthsBetween(new Date(), new Date(g.targetDate));
+    const needed = months>0?(g.targetAmount-g.savedAmount)/months:0;
+    const via = needed<=saving?'green':needed<=bal?'amber':'red';
+    const viaLabel = via==='green'?'✓ Viable':via==='amber'?'⚠ Ajustado':'⚡ En riesgo';
+    // Scenarios
+    const s1monthly = needed;
+    const s2monthly = needed*1.20;
+    const s2months = needed>0?(g.targetAmount-g.savedAmount)/s2monthly:0;
+    const s3monthly = months>0?(g.targetAmount-g.savedAmount)/(months+3):0;
+    const contribs = S.goalContributions.filter(c=>c.goalId===g.id).sort((a,b)=>b.date.localeCompare(a.date));
+    return `<div class="goal-card">
+      <div class="goal-header">
+        <div class="goal-emoji-big">${g.emoji}</div>
+        <div class="goal-info">
+          <div class="goal-name">${g.name}</div>
+          <div class="goal-sub">Meta: ${fmt(g.targetAmount)} · Fecha: ${g.targetDate} · <span style="color:var(--${via==='green'?'g':via==='amber'?'amber':'red'});font-weight:500">${viaLabel}</span></div>
+        </div>
+        <span class="mbadge mbadge-${via}" style="font-size:11px;padding:4px 10px">${fmt(needed)}/mes</span>
+      </div>
+      <div class="goal-prog-row">
+        <div class="goal-pct-big" style="color:var(--${via==='green'?'g':via==='amber'?'amber':'red'})">${pct}%</div>
+        <div class="goal-prog-info">
+          <div class="goal-prog-track"><div class="goal-prog-fill" style="width:${pct}%;background:var(--${via==='green'?'g':via==='amber'?'amber':'red'})"></div></div>
+          <div style="font-size:10.5px;color:var(--ink3)">${fmt(g.savedAmount)} ahorrados de ${fmt(g.targetAmount)} · ${months} meses restantes</div>
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:7px">Simulador de escenarios</div>
+      <div class="scenario-grid">
+        <div class="sc-card sel" onclick="selSc(this)">
+          <div class="sc-label">Plazo original</div>
+          <div class="sc-amount">${fmt(s1monthly)}</div>
+          <div class="sc-date">${g.targetDate}</div>
+          <div class="sc-tag">Actual</div>
+        </div>
+        <div class="sc-card" onclick="selSc(this)">
+          <div class="sc-label">Aporte +20%</div>
+          <div class="sc-amount">${fmt(s2monthly)}</div>
+          <div class="sc-date">${addMonths(new Date(),Math.ceil(s2months))}</div>
+          <div class="sc-tag">-${Math.max(0,months-Math.ceil(s2months))} mes(es)</div>
+        </div>
+        <div class="sc-card" onclick="selSc(this)">
+          <div class="sc-label">+3 meses plazo</div>
+          <div class="sc-amount">${fmt(s3monthly)}</div>
+          <div class="sc-date">${addMonths(new Date(),months+3)}</div>
+          <div class="sc-tag">-${fmt(needed-s3monthly)}/mes</div>
+        </div>
+      </div>
+      <div class="goal-actions" style="margin-top:11px">
+        <button class="btn btn-primary" style="flex:1;padding:9px;font-size:13px" onclick="openAporteModal('${g.id}','${g.name}')">Registrar aporte</button>
+        <button class="btn btn-ghost btn-sm" onclick="deleteGoal('${g.id}')">Eliminar</button>
+      </div>
+      ${contribs.length>0?`
+      <div style="margin-top:12px;border-top:0.5px solid var(--border);padding-top:11px">
+        <div style="font-size:12px;font-weight:500;margin-bottom:6px;color:var(--ink2)">Historial de aportes</div>
+        ${contribs.slice(0,4).map(c=>`<div class="aporte-item"><span class="aporte-date">${c.date}${c.notes?' · '+c.notes:''}</span><span class="aporte-amount">+${fmt(c.amount)}</span></div>`).join('')}
+      </div>`:''}
+    </div>`;
+  }).join('');
 }
 
-function selectScenario(card){
-  document.querySelectorAll('.scenario-card').forEach(c=>c.classList.remove('selected'));
-  card.classList.add('selected');
+function addMonths(d, m){
+  const nd = new Date(d); nd.setMonth(nd.getMonth()+m);
+  return nd.toISOString().split('T')[0];
+}
+function selSc(card){ card.closest('.scenario-grid').querySelectorAll('.sc-card').forEach(c=>c.classList.remove('sel')); card.classList.add('sel'); }
+function deleteGoal(id){ if(!confirm('¿Eliminar esta meta?')) return; S.goals=S.goals.filter(g=>g.id!==id); saveState(); renderMetas(); showToast('Meta eliminada'); }
+
+function openGoalModal(){
+  document.getElementById('ng-name').value='';
+  document.getElementById('ng-amount').value='';
+  document.getElementById('ng-date').value='';
+  document.querySelectorAll('#ng-emoji-group .toggle-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('modal-goal').classList.add('open');
+}
+function selectEmoji2(btn){ document.querySelectorAll('#ng-emoji-group .toggle-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function saveGoal(){
+  const name = document.getElementById('ng-name').value.trim();
+  const amount = parseFloat(document.getElementById('ng-amount').value)||0;
+  const date = document.getElementById('ng-date').value;
+  const emoji = document.querySelector('#ng-emoji-group .toggle-btn.active')?.dataset.emoji||'🎯';
+  if(!name||amount<=0||!date){ showToast('Completa todos los campos'); return; }
+  S.goals.push({id:'goal_'+Date.now(),name,emoji,targetAmount:amount,savedAmount:0,targetDate:date,startDate:todayStr(),status:'active',isCouple:false,createdAt:todayStr()});
+  saveState(); closeModal('modal-goal'); renderMetas();
+  showToast('Meta creada ✓');
 }
 
+function openAporteModal(goalId, goalName){
+  document.getElementById('aporte-goal-id').value=goalId;
+  document.getElementById('modal-aporte-title').textContent='Aporte a: '+goalName;
+  document.getElementById('ap-amount').value='';
+  document.getElementById('ap-date').value=todayStr();
+  document.getElementById('ap-notes').value='';
+  document.getElementById('modal-aporte').classList.add('open');
+  setTimeout(()=>document.getElementById('ap-amount').focus(),120);
+}
+function saveAporte(){
+  const goalId = document.getElementById('aporte-goal-id').value;
+  const amount = parseFloat(document.getElementById('ap-amount').value)||0;
+  const date = document.getElementById('ap-date').value||todayStr();
+  const notes = document.getElementById('ap-notes').value.trim();
+  if(amount<=0){ showToast('Ingresa un monto válido'); return; }
+  S.goalContributions.push({id:'ap_'+Date.now(),goalId,amount,date,notes,createdAt:todayStr()});
+  const g = S.goals.find(g=>g.id===goalId);
+  if(g){
+    g.savedAmount = (g.savedAmount||0)+amount;
+    if(g.savedAmount>=g.targetAmount){ g.status='completed'; showToast('🎉 ¡Meta completada!', 4000); }
+  }
+  saveState(); closeModal('modal-aporte'); renderMetas();
+  if(g&&g.status!=='completed') showToast('Aporte de '+fmt(amount)+' registrado ✓');
+}
+
+// ── PAREJA ──
+function renderPareja(){
+  const c = document.getElementById('pareja-content');
+  if(!S.profile.coupleEnabled){
+    c.innerHTML=`<div class="no-couple"><div style="font-size:40px;margin-bottom:10px">👫</div><div style="font-size:15px;font-weight:600">Modo Pareja no activado</div><p>Activa el modo pareja en tu perfil para gestionar finanzas compartidas con tu pareja.</p><button class="btn btn-primary" style="margin-top:16px;width:auto;padding:10px 20px" onclick="navigate('perfil',null)">Ir a Perfil →</button></div>`;
+    return;
+  }
+  const me = S.profile.name||'Yo';
+  const partner = S.profile.partnerName||'Mi pareja';
+  const rule = S.profile.distributionRule||'equal';
+  const pctA = S.profile.pctA||50;
+  const pctB = S.profile.pctB||50;
+  const mk = monthKey();
+  const sharedExp = S.expenses.filter(e=>e.date&&e.date.startsWith(mk)&&e.isShared);
+  const totalShared = sharedExp.reduce((a,e)=>a+e.amount,0);
+
+  // Calculate balance
+  let expectedA=0, expectedB=0;
+  sharedExp.forEach(e=>{
+    if(rule==='equal'){ expectedA+=e.amount/2; expectedB+=e.amount/2; }
+    else { expectedA+=e.amount*(pctA/100); expectedB+=e.amount*(pctB/100); }
+  });
+  const paidByA = sharedExp.filter(e=>e.paidByMe).reduce((a,e)=>a+e.amount,0);
+  const paidByB = totalShared - paidByA;
+  const diff = paidByA - expectedA;
+  const mk_key = monthKey();
+  const isSettled = S.settledMonths && S.settledMonths.includes(mk_key);
+
+  const ruleLabel = rule==='equal'?`50% / 50%`:rule==='proportional'?`Proporcional (${pctA}% / ${pctB}%)`:dist_labels.custom+` (${pctA}% / ${pctB}%)`;
+
+  c.innerHTML = `
+    <div class="couple-header-card">
+      <div class="couple-avs">
+        <div class="avatar">${initials(me)}</div>
+        <div class="avatar partner">${initials(partner)}</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <h3 style="font-size:15px;font-weight:600">${me} & ${partner}</h3>
+        <p style="font-size:11.5px;color:var(--ink3);margin-top:2px">Modo pareja activo · ${ruleLabel}</p>
+      </div>
+      <div class="couple-rule">${ruleLabel}</div>
+    </div>
+    ${totalShared>0 && !isSettled && Math.abs(diff)>0.01 ? `
+    <div class="owed-banner">
+      <svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px;color:#7A5200;flex-shrink:0"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a5 5 0 110 10A5 5 0 018 3zM7 9h2v2H7V9zm0-4h2v3H7V5z"/></svg>
+      <div class="owed-text">
+        ${diff>0
+          ? `<strong>${partner} te debe ${fmt(Math.abs(diff))}</strong> — pagaste más de lo que te correspondía`
+          : `<strong>Le debes ${fmt(Math.abs(diff))} a ${partner}</strong> — pagó más de lo que le correspondía`}
+      </div>
+      <button class="settle-btn" onclick="settleMonth()">Saldar deuda</button>
+    </div>` : ''}
+    ${isSettled ? `<div style="background:var(--g-light);border:0.5px solid var(--g-light);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:12px;font-size:12.5px;color:var(--g2)">✓ Deuda saldada este mes</div>` : ''}
+    <div class="balance-split">
+      <div class="person-card">
+        <div class="pc-header"><div class="avatar" style="width:28px;height:28px;font-size:10px">${initials(me)}</div><div class="pc-name">${me}</div></div>
+        <div class="pc-paid tc-ink">${fmt(paidByA)}</div>
+        <div class="pc-exp">Esperado: ${fmt(expectedA)} (${pctA}%)</div>
+        <div class="pc-diff ${diff>=0?'mbadge-green':'mbadge-amber'}">${diff>=0?'Pagó de más':'Pagó de menos'} ${fmt(Math.abs(diff))}</div>
+      </div>
+      <div class="person-card">
+        <div class="pc-header"><div class="avatar partner" style="width:28px;height:28px;font-size:10px">${initials(partner)}</div><div class="pc-name">${partner}</div></div>
+        <div class="pc-paid tc-ink">${fmt(paidByB)}</div>
+        <div class="pc-exp">Esperado: ${fmt(expectedB)} (${pctB}%)</div>
+        <div class="pc-diff ${diff<=0?'mbadge-green':'mbadge-amber'}">${diff<=0?'Pagó de más':'Pagó de menos'} ${fmt(Math.abs(diff))}</div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:12px">
+      <div class="sec-title">Gastos compartidos · ${monthLabel()}</div>
+      ${sharedExp.length===0
+        ? '<div style="text-align:center;padding:16px 0;color:var(--ink4);font-size:12.5px">Sin gastos compartidos este mes. Marca un gasto como compartido al registrarlo.</div>'
+        : sharedExp.sort((a,b)=>b.date.localeCompare(a.date)).map(e=>{
+            const sA = rule==='equal'?e.amount/2:e.amount*(pctA/100);
+            const sB = e.amount-sA;
+            return `<div class="txn-item">
+              <div class="txn-icon">${e.category?e.category.split(' ')[0]:'💸'}</div>
+              <div class="txn-info">
+                <div class="txn-name">${e.description}</div>
+                <div class="txn-cat">Pagó: ${e.paidByMe?me:partner} · ${e.date}</div>
+              </div>
+              <div style="text-align:right">
+                <div class="txn-amount tc-ink">${fmt(e.amount)}</div>
+                <div style="font-size:10px;color:var(--ink3)">${initials(me)}: ${fmt(sA)} · ${initials(partner)}: ${fmt(sB)}</div>
+              </div>
+            </div>`;
+          }).join('')}
+    </div>
+    ${S.goals.filter(g=>g.isCouple&&g.status==='active').length>0?`
+    <div class="card">
+      <div class="sec-title">Metas conjuntas</div>
+      ${S.goals.filter(g=>g.isCouple).map(g=>{
+        const pct=Math.min(100,Math.round(g.savedAmount/g.targetAmount*100));
+        return `<div class="meta-mini">
+          <div class="meta-mini-header"><span style="font-size:17px">${g.emoji}</span><span class="meta-mini-name">${g.name}</span></div>
+          <div class="prog-track"><div class="prog-fill pf-green" style="width:${pct}%"></div></div>
+          <div class="meta-footer"><span>${fmt(g.savedAmount)} de ${fmt(g.targetAmount)}</span><span>${pct}%</span></div>
+        </div>`;
+      }).join('')}
+    </div>`:''}
+  `;
+}
+
+function settleMonth(){
+  if(!S.settledMonths) S.settledMonths=[];
+  S.settledMonths.push(monthKey());
+  saveState(); renderPareja();
+  showToast('Deuda del mes marcada como saldada ✓');
+}
+
+// ── PERFIL ──
+const countriesOptions = [
+  {v:'PA',l:'🇵🇦 Panamá'},{v:'CO',l:'🇨🇴 Colombia'},{v:'MX',l:'🇲🇽 México'},
+  {v:'CR',l:'🇨🇷 Costa Rica'},{v:'GT',l:'🇬🇹 Guatemala'},{v:'PE',l:'🇵🇪 Perú'},
+  {v:'CL',l:'🇨🇱 Chile'},{v:'AR',l:'🇦🇷 Argentina'},{v:'EC',l:'🇪🇨 Ecuador'},
+  {v:'VE',l:'🇻🇪 Venezuela'},{v:'DO',l:'🇩🇴 Rep. Dominicana'},{v:'US',l:'🇺🇸 EE.UU.'},
+  {v:'OTHER',l:'🌎 Otro'}
+];
+function populateProfileForm(){
+  const sel = document.getElementById('prf-country');
+  sel.innerHTML = countriesOptions.map(o=>`<option value="${o.v}">${o.l}</option>`).join('');
+  sel.value = S.profile.country||'PA';
+  document.getElementById('prf-currency').value = S.profile.currency||'USD';
+  document.getElementById('prf-name').value = S.profile.name||'';
+  if(S.profile.coupleEnabled){
+    document.getElementById('prf-partner-section').style.display='block';
+    document.getElementById('prf-partner').value = S.profile.partnerName||'';
+  }
+}
+function renderPerfil(){
+  document.getElementById('perfil-name').textContent = S.profile.name||'Usuario';
+  document.getElementById('perfil-avatar').textContent = initials(S.profile.name||'U');
+  document.getElementById('prf-name').value = S.profile.name||'';
+  document.getElementById('prf-country').value = S.profile.country||'PA';
+  document.getElementById('prf-currency').value = S.profile.currency||'USD';
+  if(S.profile.coupleEnabled){
+    document.getElementById('prf-partner-section').style.display='block';
+    document.getElementById('prf-partner').value = S.profile.partnerName||'';
+  }
+  // Budget limits
+  renderBudgetLimits();
+}
+function saveProfile(){
+  const name = document.getElementById('prf-name').value.trim();
+  if(!name){ showToast('Ingresa tu nombre'); return; }
+  S.profile.name = name;
+  S.profile.country = document.getElementById('prf-country').value;
+  S.profile.currency = document.getElementById('prf-currency').value;
+  if(S.profile.coupleEnabled){
+    S.profile.partnerName = document.getElementById('prf-partner').value.trim();
+  }
+  saveState();
+  updateSidebar();
+  document.getElementById('perfil-name').textContent = name;
+  document.getElementById('perfil-avatar').textContent = initials(name);
+  document.getElementById('sb-avatar-me').textContent = initials(name);
+  document.getElementById('sb-name-me').textContent = name;
+  if(S.profile.partnerName){
+    document.getElementById('nav-pareja-label').textContent = name+' & '+S.profile.partnerName;
+    document.getElementById('mg-partner-name').textContent = S.profile.partnerName;
+  }
+  showToast('Perfil actualizado ✓');
+}
+function renderBudgetLimits(){
+  const c = document.getElementById('budget-limits-list');
+  if(S.budgetLimits.length===0){
+    c.innerHTML='<div style="font-size:12.5px;color:var(--ink4);padding:8px 0">Sin límites configurados</div>';
+    return;
+  }
+  c.innerHTML = S.budgetLimits.map(lm=>`
+    <div class="toggle-switch-row">
+      <span class="ts-label">${lm.category}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12.5px;color:var(--ink3)">${fmt(lm.amount)}/mes</span>
+        <button class="line-del" onclick="deleteLimit('${lm.id}')">×</button>
+      </div>
+    </div>
+  `).join('');
+}
+function openBudgetLimitModal(){
+  document.getElementById('lm-amount').value='';
+  document.getElementById('modal-limit').classList.add('open');
+}
+function saveLimit(){
+  const cat = document.getElementById('lm-cat').value;
+  const amount = parseFloat(document.getElementById('lm-amount').value)||0;
+  if(amount<=0){ showToast('Ingresa un monto válido'); return; }
+  const ex = S.budgetLimits.findIndex(l=>l.category===cat);
+  if(ex>=0) S.budgetLimits[ex].amount=amount;
+  else S.budgetLimits.push({id:'lm_'+Date.now(),category:cat,amount});
+  saveState(); closeModal('modal-limit'); renderBudgetLimits();
+  showToast('Límite de '+cat+' guardado ✓');
+}
+function deleteLimit(id){ S.budgetLimits=S.budgetLimits.filter(l=>l.id!==id); saveState(); renderBudgetLimits(); }
+
+// ── MODALS ──
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function closeModalOnOverlay(e,id){ if(e.target===document.getElementById(id)) closeModal(id); }
+
+// ── TOAST ──
 let toastTimer;
-function showToast(msg){
+function showToast(msg, dur=2800){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
+  t.textContent=msg; t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+  toastTimer=setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+// ── RESET ──
+function confirmReset(){
+  if(confirm('¿Eliminar todos tus datos de FinWise? Esta acción no se puede deshacer.')){
+    localStorage.removeItem(LS);
+    location.reload();
+  }
+}
+
+// ── INIT ──
+loadState();
+if(S.profile && S.profile.onboardingDone){
+  initApp();
+} else {
+  renderStep();
 }
 </script>
 </body>
